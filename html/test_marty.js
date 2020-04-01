@@ -80,7 +80,8 @@ function updateInfo() {
 var trialClock;
 var text;
 var key_resp;
-var rect;
+var circle;
+var grid;
 var globalClock;
 var routineTimer;
 function experimentInit() {
@@ -99,13 +100,16 @@ function experimentInit() {
   
   key_resp = new core.Keyboard({psychoJS: psychoJS, clock: new util.Clock(), waitForStart: true});
   
-  rect = new visual.Rect({
+  circle = new visual.Polygon({
     win : psychoJS.window,
-    name : 'rect', 
-    ori : 0, pos : [0, 0], size : [1.5, 1.5],
+    name : 'circle', 
+    ori : 0, pos : [0, 0], size : 0.5,
+      radius: 0.5, edges:32,
     fillColor: new util.Color([1, 0, 1]), 
     flipHoriz : false, flipVert : false,
   });
+
+    grid = new Grid( 'grid', psychoJS.window, 1,);
   // Create some handy timers
   globalClock = new util.Clock();  // to track the time since experiment started
   routineTimer = new util.CountdownTimer();  // to track time remaining of each (non-slip) routine
@@ -148,6 +152,49 @@ function trialsLoopEnd() {
   return Scheduler.Event.NEXT;
 }
 
+function Grid (name, win, size)
+{
+    this.rects = []
+    // background
+    this.rects.push(new visual.Rect({
+    win : win,
+    name : 'back_ground', 
+    ori : 0, pos : [0, 0], size : [size,size],
+    fillColor: new util.Color([1, 1, 1]), 
+    lineColor: new util.Color([0, 0, 0]), 
+    flipHoriz : false, flipVert : false,
+  }) );
+
+    var lines = 5;
+    var offset = size/2;
+    var size_inc = size/lines;
+    // grid
+    
+    for (var i = lines; i>0 ; i--){
+    var this_size = size_inc*i;
+    var this_offset = (offset-this_size/2)/2;
+
+    this.rects.push(new visual.Rect({
+    win : win,
+    name : 'rect'+i, 
+    ori : 0, pos : [-this_offset, -this_offset], size : [this_size, this_size],
+    lineColor: new util.Color([0, 0, 0]), 
+    flipHoriz : false, flipVert : false,
+  }) );
+this.rects.push(new visual.Rect({
+    win : win,
+    name : 'rect'+i, 
+    ori : 0, pos : [this_offset, this_offset], size : [this_size, this_size],
+    lineColor: new util.Color([0, 0, 0]), 
+    flipHoriz : false, flipVert : false,
+  }) );
+
+        }
+
+
+	}
+
+
 
 var t;
 var frameN;
@@ -167,7 +214,8 @@ function trialRoutineBegin(trials) {
     trialComponents = [];
     trialComponents.push(text);
     trialComponents.push(key_resp);
-    trialComponents.push(rect);
+    trialComponents.push(circle);
+    trialComponents.push(grid);
     
     for (const thisComponent of trialComponents)
       if ('status' in thisComponent)
@@ -229,8 +277,26 @@ function trialRoutineEachFrame(trials) {
     }
     
     
-    // *rect* updates
+    // *circle* updates
+    if (t >= 1.0 && circle.status === PsychoJS.Status.NOT_STARTED) {
+      // keep track of start time/frame for later
+      circle.tStart = t;  // (not accounting for frame time here)
+      circle.frameNStart = frameN;  // exact frame index
+      
+      circle.setAutoDraw(true);
+    }
+
+    frameRemains = 1.0 + 7.0 - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
+    if (circle.status === PsychoJS.Status.STARTED && t >= frameRemains) {
+
+        console.log("set draw for dot..");
+      circle.setAutoDraw(false);
+    }
+    // *grid* updates
+    for (const rect of grid.rects){
+
     if (t >= 1.0 && rect.status === PsychoJS.Status.NOT_STARTED) {
+        console.log("rect in grid..");
       // keep track of start time/frame for later
       rect.tStart = t;  // (not accounting for frame time here)
       rect.frameNStart = frameN;  // exact frame index
@@ -241,9 +307,10 @@ function trialRoutineEachFrame(trials) {
     frameRemains = 1.0 + 7.0 - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
     if (rect.status === PsychoJS.Status.STARTED && t >= frameRemains) {
 
-        console.log("set draw for dot..");
       rect.setAutoDraw(false);
     }
+    }
+
     // check for quit (typically the Esc key)
     if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
