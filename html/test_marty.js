@@ -83,6 +83,7 @@ var text;
 var key_resp;
 var circle;
 var grid;
+var stim_pair;
 var globalClock;
 var routineTimer;
 function experimentInit() {
@@ -110,7 +111,8 @@ function experimentInit() {
     flipHoriz : false, flipVert : false,
   });
 
-    grid = new Vs_stim( 'grid', psychoJS.window, 1,);
+    grid = new Vs_stim( 'grid', psychoJS.window, 1.5,5);
+    stim_pair = Vs_stim.getPairForTrial(7,psychoJS.window,1.5);
   // Create some handy timers
   globalClock = new util.Clock();  // to track the time since experiment started
   routineTimer = new util.CountdownTimer();  // to track time remaining of each (non-slip) routine

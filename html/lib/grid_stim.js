@@ -71,38 +71,50 @@ class  Grid {
 
 class Vs_stim extends Grid {
 
-    constructor(name, win, size)
+    constructor(name, win, size,lines=5)
     {
-        super(name,win,size);
+        super(name,win,size,lines);
+        this.dot_size = ((this.size / this.lines) / 2 )*0.8;
         this.dots = []
-        this.middle_dot = new Polygon({
-            win: win,
-            name: 'black_dot',
-            size: size*0.08,
-            lineColor: new Color('black'),
-            fillColor: new Color('black'),
-            edges: 32,
-        });
 
+        if (this.lines % 2)
+        {
+            this.middle_dot = new Polygon({
+                win: win,
+                name: 'black_dot',
+                size: this.dot_size,
+                lineColor: new Color('black'),
+                fillColor: new Color('black'),
+                edges: 32,
+            });
+        }
+        // to keep track of free positions in the grid (used for random dot generation)
+        this.free_pos = this.getAllPossiblePositions();
+
+        // testing 
         this.addDot(0,0);
         this.addDot(2,0);
         this.addDot(3,2);
-        
+
     }
 
-
+    // function so we can use this like we would use any other stimulus
     setAutoDraw(autoDraw, log = false)
     {
         // takes care of setting started, stopped...
         super.setAutoDraw(autoDraw,log);
 
         // enable drawing for additional stuff:
-        this.middle_dot.setAutoDraw(autoDraw,log);
+        if (this.lines % 2)
+        {
+            this.middle_dot.setAutoDraw(autoDraw,log);
+        }
 
         for (const dot of this.dots){
             dot.setAutoDraw(autoDraw,log);
         }
     }
+
     // adds a dot to the given field in the grid 
     // x=0 is left y=0 is at the bottom
     // x and y are indices not coordinates!
@@ -113,24 +125,126 @@ class Vs_stim extends Grid {
             console.log("(addDot): index out of range");
             return;
         }
+        let empty_pos = this.free_pos.findIndex((element) => (element.x == x && element.y == y));
+        if (empty_pos != -1)
+        {
+            this.free_pos.splice(empty_pos,1);
+        }
+        else
+        {
+            console.log("(addDot): spot already taken.");
+            return;
+        }
 
         let shift = this.size/4;
         let line_distance = (this.size/this.lines) /2;
 
         let x_pos = x*line_distance+(line_distance/2)-shift;
-        
+
         let y_pos = y*line_distance+(line_distance/2)-shift;
 
         this.dots.push(new Polygon({
             win: this.win,
             name: 'circle',
-            size: this.size*0.08,
+            size: this.dot_size,
             lineColor: new Color('black'),
             fillColor: new Color('white'),
             edges: 32,
             pos: [x_pos,y_pos]
         }));
     }
+
+    // adds one random dot to the grid
+    addRandomDot(){
+
+        // get random position from our list of free positions
+        let rand_pos = this.free_pos[Math.floor(Math.random() * this.free_pos.length)];
+        this.addDot(rand_pos);
+
+    }
+
+    // adds n_dots random dot to the grid
+    addRandomDots(n_dots){
+        for(let i= 0; i<n_dots;i++){
+            this.addRandomDot();
+        }
+    }
+
+    // returns all possible positions to place a dot. 
+    // the middle is not included because we have the black dot there already.
+    getAllPossiblePositions(){
+        let poss_pos = [];
+        let middle = Math.floor(this.lines / 2);
+        for (let i = 0;i<this.lines;i++)
+        {
+            for (let j = 0;j<this.lines;j++)
+            {
+                // this is only relevant for grids with uneven number of lines
+                if (this.lines % 2 && i == middle && j == middle)
+                {
+                    // dont add the middle position!
+                }
+                else
+                {
+                    poss_pos.push({x:i,y:j});
+                }
+            }
+        }
+        return poss_pos;
+
+    }
+
+    getTakenPositions(){
+        let taken_pos = this.getAllPossiblePositions();
+        for (const pos of this.free_pos){
+            let remove_pos = taken_pos.findIndex((element) => (element.x == pos.x && element.y == pos.y));
+
+            if (remove_pos != -1)
+            {
+                this.free_pos.splice(remove_pos,1);
+            }
+            else
+            { 
+                throw message || "(getTakenPositions) index problem somewhere..";
+            }
+        }
+
+
+        return taken_pos;
+    }
+
+    moveRandomDot(){
+        let taken_pos = this.getTakenPositions();
+        let to_remove = this.free_pos[Math.floor(Math.random() * this.free_pos.length)];
+        this.addRandomDot();
+        this.free_pos.push(to_remove);
+
+        // actually remove the dot!
+        this.dots = []
+        for (const dot_pos of this.getTakenPositions()){
+            this.addDot(dot_pos);
+        }
+    }
+
+    // returns a pair of Vs_stimuli objects to use in our study.
+    //
+    static getPairForTrial(n_dots,win,size,correct){
+        let stim_first = new Vs_stim('learn',win,size);
+        stim_first.addRandomDots(n_dots);
+        let stim_second = new Vs_stim('test',win,size);
+        // copy elements because i dont want to write a copy ctor..
+        // slice copies by value.
+        stim_second.dots = stim_first.dots.slice(); 
+        stim_second.free_pos = stim_first.free_pos.slice(); 
+
+        if(!correct){
+            stim_second.moveRandomDot();
+        }
+
+        return {learn: stim_first,test:stim_second};
+
+    }
+
 
 }
 
