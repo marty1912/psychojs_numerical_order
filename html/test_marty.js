@@ -9,6 +9,7 @@ import { Scheduler } from './lib/util-2020.1.js';
 import * as util from './lib/util-2020.1.js';
 import * as visual from './lib/visual-2020.1.js';
 import * as sound from './lib/sound-2020.1.js';
+import {Vs_stim} from './lib/grid_stim.js';
 
 // init psychoJS:
 const psychoJS = new PsychoJS({
@@ -109,7 +110,7 @@ function experimentInit() {
     flipHoriz : false, flipVert : false,
   });
 
-    grid = new Grid( 'grid', psychoJS.window, 1,);
+    grid = new Vs_stim( 'grid', psychoJS.window, 1,);
   // Create some handy timers
   globalClock = new util.Clock();  // to track the time since experiment started
   routineTimer = new util.CountdownTimer();  // to track time remaining of each (non-slip) routine
@@ -151,48 +152,6 @@ function trialsLoopEnd() {
 
   return Scheduler.Event.NEXT;
 }
-
-function Grid (name, win, size)
-{
-    this.rects = []
-    // background
-    this.rects.push(new visual.Rect({
-    win : win,
-    name : 'back_ground', 
-    ori : 0, pos : [0, 0], size : [size,size],
-    fillColor: new util.Color([1, 1, 1]), 
-    lineColor: new util.Color([0, 0, 0]), 
-    flipHoriz : false, flipVert : false,
-  }) );
-
-    var lines = 5;
-    var offset = size/2;
-    var size_inc = size/lines;
-    // grid
-    
-    for (var i = lines; i>0 ; i--){
-    var this_size = size_inc*i;
-    var this_offset = (offset-this_size/2)/2;
-
-    this.rects.push(new visual.Rect({
-    win : win,
-    name : 'rect'+i, 
-    ori : 0, pos : [-this_offset, -this_offset], size : [this_size, this_size],
-    lineColor: new util.Color([0, 0, 0]), 
-    flipHoriz : false, flipVert : false,
-  }) );
-this.rects.push(new visual.Rect({
-    win : win,
-    name : 'rect'+i, 
-    ori : 0, pos : [this_offset, this_offset], size : [this_size, this_size],
-    lineColor: new util.Color([0, 0, 0]), 
-    flipHoriz : false, flipVert : false,
-  }) );
-
-        }
-
-
-	}
 
 
 
@@ -292,23 +251,20 @@ function trialRoutineEachFrame(trials) {
         console.log("set draw for dot..");
       circle.setAutoDraw(false);
     }
-    // *grid* updates
-    for (const rect of grid.rects){
 
-    if (t >= 1.0 && rect.status === PsychoJS.Status.NOT_STARTED) {
-        console.log("rect in grid..");
+    if (t >= 1.0 && grid.status === PsychoJS.Status.NOT_STARTED) {
+        console.log("grid in grid..");
       // keep track of start time/frame for later
-      rect.tStart = t;  // (not accounting for frame time here)
-      rect.frameNStart = frameN;  // exact frame index
+      grid.tStart = t;  // (not accounting for frame time here)
+      grid.frameNStart = frameN;  // exact frame index
       
-      rect.setAutoDraw(true);
+      grid.setAutoDraw(true);
     }
 
     frameRemains = 1.0 + 7.0 - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
-    if (rect.status === PsychoJS.Status.STARTED && t >= frameRemains) {
+    if (grid.status === PsychoJS.Status.STARTED && t >= frameRemains) {
 
-      rect.setAutoDraw(false);
-    }
+      grid.setAutoDraw(false);
     }
 
     // check for quit (typically the Esc key)
