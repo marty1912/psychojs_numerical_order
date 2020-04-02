@@ -91,11 +91,6 @@ class Vs_stim extends Grid {
         // to keep track of free positions in the grid (used for random dot generation)
         this.free_pos = this.getAllPossiblePositions();
 
-        // testing 
-        this.addDot(0,0);
-        this.addDot(2,0);
-        this.addDot(3,2);
-
     }
 
     // function so we can use this like we would use any other stimulus
@@ -125,6 +120,7 @@ class Vs_stim extends Grid {
             console.log("(addDot): index out of range");
             return;
         }
+
         let empty_pos = this.free_pos.findIndex((element) => (element.x == x && element.y == y));
         if (empty_pos != -1)
         {
@@ -159,7 +155,7 @@ class Vs_stim extends Grid {
 
         // get random position from our list of free positions
         let rand_pos = this.free_pos[Math.floor(Math.random() * this.free_pos.length)];
-        this.addDot(rand_pos);
+        this.addDot(rand_pos.x, rand_pos.y);
 
     }
 
@@ -222,7 +218,7 @@ class Vs_stim extends Grid {
         // actually remove the dot!
         this.dots = []
         for (const dot_pos of this.getTakenPositions()){
-            this.addDot(dot_pos);
+            this.addDot(dot_pos.x,dot_pos.y);
         }
     }
 

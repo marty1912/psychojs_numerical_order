@@ -82,7 +82,7 @@ var trialClock;
 var text;
 var key_resp;
 var circle;
-var grid;
+//var grid;
 var stim_pair;
 var globalClock;
 var routineTimer;
@@ -111,8 +111,8 @@ function experimentInit() {
     flipHoriz : false, flipVert : false,
   });
 
-    grid = new Vs_stim( 'grid', psychoJS.window, 1.5,5);
-    stim_pair = Vs_stim.getPairForTrial(7,psychoJS.window,1.5);
+    //grid = new Vs_stim( 'grid', psychoJS.window, 1.5,5);
+    stim_pair = Vs_stim.getPairForTrial(7,psychoJS.window,1.5,false);
   // Create some handy timers
   globalClock = new util.Clock();  // to track the time since experiment started
   routineTimer = new util.CountdownTimer();  // to track time remaining of each (non-slip) routine
@@ -176,7 +176,8 @@ function trialRoutineBegin(trials) {
     trialComponents.push(text);
     trialComponents.push(key_resp);
     trialComponents.push(circle);
-    trialComponents.push(grid);
+    trialComponents.push(stim_pair.learn);
+    trialComponents.push(stim_pair.test);
     
     for (const thisComponent of trialComponents)
       if ('status' in thisComponent)
@@ -254,19 +255,35 @@ function trialRoutineEachFrame(trials) {
       circle.setAutoDraw(false);
     }
 
-    if (t >= 1.0 && grid.status === PsychoJS.Status.NOT_STARTED) {
-        console.log("grid in grid..");
+
+    if (t >= 1.0 && stim_pair.learn.status === PsychoJS.Status.NOT_STARTED) {
+        console.log("stim_pair.learn in stim_pair.learn..");
       // keep track of start time/frame for later
-      grid.tStart = t;  // (not accounting for frame time here)
-      grid.frameNStart = frameN;  // exact frame index
+      stim_pair.learn.tStart = t;  // (not accounting for frame time here)
+      stim_pair.learn.frameNStart = frameN;  // exact frame index
       
-      grid.setAutoDraw(true);
+      stim_pair.learn.setAutoDraw(true);
     }
 
     frameRemains = 1.0 + 7.0 - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
-    if (grid.status === PsychoJS.Status.STARTED && t >= frameRemains) {
+    if (stim_pair.learn.status === PsychoJS.Status.STARTED && t >= frameRemains) {
 
-      grid.setAutoDraw(false);
+      stim_pair.learn.setAutoDraw(false);
+    }
+
+    if (t >= 8.0 && stim_pair.test.status === PsychoJS.Status.NOT_STARTED) {
+        console.log("stim_pair.test in stim_pair.test..");
+      // keep track of start time/frame for later
+      stim_pair.test.tStart = t;  // (not accounting for frame time here)
+      stim_pair.test.frameNStart = frameN;  // exact frame index
+      
+      stim_pair.test.setAutoDraw(true);
+    }
+
+    frameRemains = 8.0 + 7.0 - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
+    if (stim_pair.test.status === PsychoJS.Status.STARTED && t >= frameRemains) {
+
+      stim_pair.test.setAutoDraw(false);
     }
 
     // check for quit (typically the Esc key)
