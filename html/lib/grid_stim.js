@@ -191,33 +191,55 @@ class Vs_stim extends Grid {
     }
 
     getTakenPositions(){
+
+        console.log("(getTakenPositions) called");
         let taken_pos = this.getAllPossiblePositions();
+
+       
         for (const pos of this.free_pos){
+
+            console.log("(getTakenPositions) removing: ",pos);
             let remove_pos = taken_pos.findIndex((element) => (element.x == pos.x && element.y == pos.y));
 
             if (remove_pos != -1)
             {
-                this.free_pos.splice(remove_pos,1);
+                taken_pos.splice(remove_pos,1);
             }
             else
             { 
-                throw message || "(getTakenPositions) index problem somewhere..";
+
+                for (const p of taken_pos){
+    console.log("(getTakenPositions) taken_pos ",p);
+                }
+
+            console.log("(getTakenPositions) could not find: ",pos);
+
+                throw  "(getTakenPositions) index problem somewhere..";
             }
         }
+
+        console.log("(getTakenPositions) returning",taken_pos);
+
 
 
         return taken_pos;
     }
 
     moveRandomDot(){
+        console.log("(moveRandomDot) called:");
         let taken_pos = this.getTakenPositions();
-        let to_remove = this.free_pos[Math.floor(Math.random() * this.free_pos.length)];
+        let to_remove = taken_pos[Math.floor(Math.random() * taken_pos.length)];
         this.addRandomDot();
         this.free_pos.push(to_remove);
 
-        // actually remove the dot!
-        this.dots = []
-        for (const dot_pos of this.getTakenPositions()){
+        let pos_to_place_dot = this.getTakenPositions();
+        console.log("pos_to_place_dot:"+pos_to_place_dot);
+
+        // remove all the dots!
+        this.dots.length = 0;
+        this.free_pos = this.getAllPossiblePositions();
+
+        for (const dot_pos of pos_to_place_dot){
             this.addDot(dot_pos.x,dot_pos.y);
         }
     }
@@ -233,9 +255,12 @@ class Vs_stim extends Grid {
         stim_second.dots = stim_first.dots.slice(); 
         stim_second.free_pos = stim_first.free_pos.slice(); 
 
-        if(!correct){
+        if(correct == false){
             stim_second.moveRandomDot();
         }
+
+
+
 
         return {learn: stim_first,test:stim_second};
 
