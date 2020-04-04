@@ -110,6 +110,10 @@ class Vs_stim extends Grid {
         }
     }
 
+
+    getDifficulty(){
+        return this.getTakenPositions().length;
+    }
     // adds a dot to the given field in the grid 
     // x=0 is left y=0 is at the bottom
     // x and y are indices not coordinates!

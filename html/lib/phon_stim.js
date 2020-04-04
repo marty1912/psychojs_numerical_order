@@ -16,6 +16,9 @@ class Phon_stim extends TextStim{
         this.text = rand_string;
     }
 
+    getDifficulty(){
+        return this.text.length;
+    }
     // changes one letter of the text
     changeOneLetter(){
         console.log("(changeOneLetter) called");

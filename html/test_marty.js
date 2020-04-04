@@ -11,6 +11,7 @@ import * as visual from './lib/visual-2020.1.js';
 import * as sound from './lib/sound-2020.1.js';
 import {Vs_stim} from './lib/grid_stim.js';
 import {Phon_stim} from './lib/phon_stim.js';
+import {StaircaseScheduler} from './staircase_sheduler.js';
 
 // init psychoJS:
 const psychoJS = new PsychoJS({
@@ -26,7 +27,7 @@ psychoJS.openWindow({
 });
 
 // store info about the experiment session:
-let expName = 'test_builder';  // from the Builder filename that created this script
+let expName = 'marties test thingy';  // from the Builder filename that created this script
 let expInfo = {'participant': '', 'session': '001'};
 
 // schedule the experiment:
@@ -41,6 +42,7 @@ psychoJS.scheduleCondition(function() { return (psychoJS.gui.dialogComponent.but
 
 // flowScheduler gets run if the participants presses OK
 flowScheduler.add(updateInfo); // add timeStamp
+flowScheduler.add(new StaircaseScheduler(psychoJS));
 flowScheduler.add(experimentInit);
 const trialsLoopScheduler = new Scheduler(psychoJS);
 flowScheduler.add(trialsLoopBegin, trialsLoopScheduler);
