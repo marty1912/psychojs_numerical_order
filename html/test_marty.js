@@ -10,6 +10,7 @@ import * as util from './lib/util-2020.1.js';
 import * as visual from './lib/visual-2020.1.js';
 import * as sound from './lib/sound-2020.1.js';
 import {Vs_stim} from './lib/grid_stim.js';
+import {Phon_stim} from './lib/phon_stim.js';
 
 // init psychoJS:
 const psychoJS = new PsychoJS({
@@ -112,7 +113,7 @@ function experimentInit() {
   });
 
     //grid = new Vs_stim( 'grid', psychoJS.window, 1.5,5);
-    stim_pair = Vs_stim.getPairForTrial(7,psychoJS.window,1.5,false);
+    stim_pair = Phon_stim.getPairForTrial(7,psychoJS.window,1.5,false);
   // Create some handy timers
   globalClock = new util.Clock();  // to track the time since experiment started
   routineTimer = new util.CountdownTimer();  // to track time remaining of each (non-slip) routine
