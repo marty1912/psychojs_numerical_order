@@ -39,6 +39,7 @@ class StaircaseScheduler extends Scheduler{
         this.fixation_time_1 = 4;
         this.test_time = 2;
         this.fixation_time_2 = 1;
+        this.valid_keys = ['j', 'k'];
     }
 
 
@@ -124,15 +125,10 @@ class StaircaseScheduler extends Scheduler{
       this.keyboard.tStart = t;  // (not accounting for frame time here)
       this.keyboard.frameNStart = this.frameN;  // exact frame index
       
-        console.log("in activate keyboard");
-      // keyboard checking is just starting
-      this.keyboard.clock.reset();
-      this.keyboard.start();
-      this.keyboard.clearEvents();
-        // TODO do this for better timing!!
-      //this.psychojs.window.callOnFlip(function() { this.keyboard.clock.reset(); });  // t=0 on next screen flip
-      //this.psychojs.window.callOnFlip(function() { this.keyboard.start(); }); // start on screen flip
-      //this.psychojs.window.callOnFlip(function() { this.keyboard.clearEvents(); });
+        // we do this at window flip for better timing!!
+      this.psychojs.window.callOnFlip(function(clock) { clock.reset(); },this.keyboard.clock);  // t=0 on next screen flip
+      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.start(); },this.keyboard); // start on screen flip
+      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.clearEvents(); },this.keyboard);
     }
 
     time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
@@ -141,7 +137,7 @@ class StaircaseScheduler extends Scheduler{
     }
 
     if (this.keyboard.status === PsychoJS.Status.STARTED) {
-      let theseKeys = this.keyboard.getKeys({keyList: ['j', 'k', 's'], waitRelease: false});
+      let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
       this.all_pressed_keys = this.all_pressed_keys.concat(theseKeys);
     }
 
@@ -163,6 +159,13 @@ class StaircaseScheduler extends Scheduler{
 }
 
     loopEnd(){
+        // and now the loop has ended
+        this.stimpair.learn.setAutoDraw(false);
+        this.stimpair.test.setAutoDraw(false);
+        // get data:
+        // TODO!!
+        
+
 
     }
 
