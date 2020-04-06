@@ -14,7 +14,7 @@ import {Phon_stim} from './lib/phon_stim.js';
 
 
 class StaircaseScheduler extends Scheduler{
-    constructor(psychojs,mode){
+    constructor(psychojs,mode,correct_key='j'){
         super(psychojs);
         this.psychojs = psychojs;
         if (mode == "phon")
@@ -27,11 +27,13 @@ class StaircaseScheduler extends Scheduler{
             this.stim_class =Vs_stim ;
         }
 
-        for(let i= 0;i<10;i++)
+        for(let i= 0;i<3;i++)
         {
         this.add(this.loopHead);
         this.add(this.loopBodyEachFrame);
+        this.add(this.loopEnd);
         }
+        this.add(this.saveData);
 
         // start with difficulty 7
         this.current_difficulty = 7;
@@ -40,6 +42,7 @@ class StaircaseScheduler extends Scheduler{
         this.test_time = 2;
         this.fixation_time_2 = 1;
         this.valid_keys = ['j', 'k'];
+        this.correct_key = correct_key;
     }
 
 
@@ -60,7 +63,8 @@ class StaircaseScheduler extends Scheduler{
 
     loopHead(){
 
-        this.stimpair = this.stim_class.getPairForTrial(this.current_difficulty,this.psychojs.window,1.5,false);
+        this.trial_correct = false;
+        this.stimpair = this.stim_class.getPairForTrial(this.current_difficulty,this.psychojs.window,1.5,this.trial_correct);
 
         this.setupTimes();
 
@@ -122,6 +126,7 @@ class StaircaseScheduler extends Scheduler{
     if (t >= this.t_test_start && this.keyboard.status === PsychoJS.Status.NOT_STARTED) {
       // keep track of start time/frame for later
        
+      console.log("keyboard activated..");
       this.keyboard.tStart = t;  // (not accounting for frame time here)
       this.keyboard.frameNStart = this.frameN;  // exact frame index
       
@@ -162,13 +167,52 @@ class StaircaseScheduler extends Scheduler{
         // and now the loop has ended
         this.stimpair.learn.setAutoDraw(false);
         this.stimpair.test.setAutoDraw(false);
+
         // get data:
         // TODO!!
+        this.psychojs.experiment.addData("len",this.stimpair.learn.getDifficulty());
+
+        console.log("data: ",this.all_pressed_keys);
+        // check if it was correct or not.
+        for( let i= 0; i< this.all_pressed_keys.length ; i++){
+
+            let pressed_key = this.all_pressed_keys[i];
+
+              console.log("keyboard keys: ",pressed_key.name);
+
+            if( this.valid_keys.includes(pressed_key.name)){
+                if ((pressed_key.name == this.correct_key && this.trial_correct == true) 
+                    || (pressed_key.name != this.correct_key && this.trial_correct == false)){
+                // correct response
+                    console.log("------------- correct response -------------");
+                    this.psychojs.experiment.addData("correct","true");
+                    this.psychojs.experiment.addData("rt",pressed_key.rt);
+                    break;
+
+                }
+                else{
+                    // incorrect response
+                    console.log("------------- incorrect response -------------");
+                    this.psychojs.experiment.addData("correct","false");
+                    this.psychojs.experiment.addData("rt",pressed_key.rt);
+                     break;
+
+                }
+
+            }
+
+        }
         
 
+        this.psychojs.experiment.nextEntry();
+
+        return Scheduler.Event.NEXT;
 
     }
 
+    saveData(){
+        this.psychojs.experiment.save();
+    }
 
     }
 

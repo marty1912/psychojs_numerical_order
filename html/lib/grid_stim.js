@@ -121,7 +121,7 @@ class Vs_stim extends Grid {
 
         if (x >= this.lines || y >= this.lines){
             // out of range!!
-            console.log("(addDot): index out of range");
+            //console.log("(addDot): index out of range");
             return;
         }
 
@@ -132,7 +132,7 @@ class Vs_stim extends Grid {
         }
         else
         {
-            console.log("(addDot): spot already taken.");
+            //console.log("(addDot): spot already taken.");
             return;
         }
 
@@ -196,13 +196,13 @@ class Vs_stim extends Grid {
 
     getTakenPositions(){
 
-        console.log("(getTakenPositions) called");
+        //console.log("(getTakenPositions) called");
         let taken_pos = this.getAllPossiblePositions();
 
        
         for (const pos of this.free_pos){
 
-            console.log("(getTakenPositions) removing: ",pos);
+            //console.log("(getTakenPositions) removing: ",pos);
             let remove_pos = taken_pos.findIndex((element) => (element.x == pos.x && element.y == pos.y));
 
             if (remove_pos != -1)
@@ -213,16 +213,16 @@ class Vs_stim extends Grid {
             { 
 
                 for (const p of taken_pos){
-    console.log("(getTakenPositions) taken_pos ",p);
+    //console.log("(getTakenPositions) taken_pos ",p);
                 }
 
-            console.log("(getTakenPositions) could not find: ",pos);
+            //console.log("(getTakenPositions) could not find: ",pos);
 
                 throw  "(getTakenPositions) index problem somewhere..";
             }
         }
 
-        console.log("(getTakenPositions) returning",taken_pos);
+        //console.log("(getTakenPositions) returning",taken_pos);
 
 
 
@@ -230,14 +230,14 @@ class Vs_stim extends Grid {
     }
 
     moveRandomDot(){
-        console.log("(moveRandomDot) called:");
+        //console.log("(moveRandomDot) called:");
         let taken_pos = this.getTakenPositions();
         let to_remove = taken_pos[Math.floor(Math.random() * taken_pos.length)];
         this.addRandomDot();
         this.free_pos.push(to_remove);
 
         let pos_to_place_dot = this.getTakenPositions();
-        console.log("pos_to_place_dot:"+pos_to_place_dot);
+        //console.log("pos_to_place_dot:"+pos_to_place_dot);
 
         // remove all the dots!
         this.dots.length = 0;
