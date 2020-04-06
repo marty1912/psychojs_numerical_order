@@ -12,6 +12,7 @@ import * as sound from './lib/sound-2020.1.js';
 import {Vs_stim} from './lib/grid_stim.js';
 import {Phon_stim} from './lib/phon_stim.js';
 import {Staircase} from './lib/staircase.js';
+import {InstuctionsScheduler} from './instructions_sheduler.js';
 
 
 class StaircaseScheduler extends Scheduler{
@@ -58,8 +59,7 @@ class StaircaseScheduler extends Scheduler{
     // sets up the schedule of the staircase procedure
     setupSchedule(){
         // setup the schedule
-        this.add(this.instructionsInit);
-        this.add(this.showInstructions);
+        this.add(new InstuctionsScheduler(this.psychojs));
         for(let i= 0;i<25;i++)
         {
         this.add(this.loopHead);
@@ -69,68 +69,7 @@ class StaircaseScheduler extends Scheduler{
         this.add(this.saveData);
     }
 
-    instructionsInit(){
-
-    this.instructions = new visual.TextStim({
-    win: this.psychojs.window,
-    name: 'text',
-    text: 'TODO: get instructions here\n press j or k to continue.',
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0], height: 0.1,  wrapWidth: undefined, ori: 0,
-    color: new util.Color('black'),  opacity: 1,
-    depth: 0.0 
-  });
-
-    this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
-
-        this.instructions.setAutoDraw(true);
-
-        this.clock.reset();
-
-      return Scheduler.Event.NEXT;
-    }
-
-    showInstructions(){
-
-        let t=this.clock.getTime();
-    let time_adjusted_with_frame= 0
-    let t_keyboard_enable= 3
-
-    time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
-
-    // enable keyboard presses
-    if (t >= t_keyboard_enable && this.keyboard.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-       
-      console.log("keyboard activated..");
-      this.keyboard.tStart = t;  // (not accounting for frame time here)
-      this.keyboard.frameNStart = this.frameN;  // exact frame index
-      
-        // we do this at window flip for better timing!!
-      this.psychojs.window.callOnFlip(function(clock) { clock.reset(); },this.keyboard.clock);  // t=0 on next screen flip
-      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.start(); },this.keyboard); // start on screen flip
-      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.clearEvents(); },this.keyboard);
-    }
-
-    if (this.keyboard.status === PsychoJS.Status.STARTED) {
-      let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
-        for (let i = 0; i< theseKeys.length ; i++){
-
-            let this_key = theseKeys[i];
-        if( this.valid_keys.includes(this_key.name)){
-            this.instructions.setAutoDraw(false);
-              this.keyboard.stop();
-            
-            return Scheduler.Event.NEXT;
-        }
-        }
-    }
-
-      return Scheduler.Event.FLIP_REPEAT;
-    }
-
-    setupTimes(){
+     setupTimes(){
 
         this.fixation_time_1 = 4;
         this.test_time = 2;
@@ -156,8 +95,9 @@ class StaircaseScheduler extends Scheduler{
 
         this.current_difficulty = this.staircase.getCurrentVal();
 
-        this.trial_correct = false;
-        this.stimpair = this.stim_class.getPairForTrial(this.current_difficulty,this.psychojs.window,1.5,this.trial_correct);
+        this.trial_correct =Math.random() >= 0.5; 
+
+        this.stimpair = this.stim_class.getPairForTrial(this.current_difficulty,this.psychojs.window,this.trial_correct);
 
         this.setupTimes();
 
@@ -246,6 +186,13 @@ class StaircaseScheduler extends Scheduler{
         console.log("next loop..");
             continueRoutine = false;
         }
+
+            if (this.psychojs.experiment.experimentEnded || this.psychojs.eventManager.getKeys({keyList:['escape']}).length > 0) {
+            this.psychojs.window.close();
+              this.psychojs.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
+              return Scheduler.Event.QUIT;
+
+            }
 
 
     // refresh the screen if continuing

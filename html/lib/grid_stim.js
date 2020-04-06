@@ -39,6 +39,7 @@ class  Grid {
                 name : 'rect'+i, 
                 ori : 0, pos : [this_offset, 0], size : [this_size, size],
                 lineColor: new Color('black'), 
+                fillColor : new Color([0,0,0]), 
                 lineWidth: 2,
                 flipHoriz : false, flipVert : false,
             }) );
@@ -47,6 +48,7 @@ class  Grid {
                 name : 'rect'+i, 
                 ori : 0, pos : [0, -this_offset], size : [size, this_size],
                 lineColor: new Color('black'), 
+                fillColor : new Color([0,0,0]), 
                 lineWidth: 2,
                 flipHoriz : false, flipVert : false,
             }) );
@@ -96,6 +98,8 @@ class Vs_stim extends Grid {
     // function so we can use this like we would use any other stimulus
     setAutoDraw(autoDraw, log = false)
     {
+
+        console.log("(setAutoDraw): ",autoDraw);
         // takes care of setting started, stopped...
         super.setAutoDraw(autoDraw,log);
 

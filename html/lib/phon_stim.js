@@ -37,7 +37,7 @@ class Phon_stim extends TextStim{
 
     }
     
-    static getRandomString(len,possible_letters=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']){
+    static getRandomString(len,possible_letters=['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z']){
         // clamp the len between 0 and the array len.
         len = (len > possible_letters.length) ? possible_letters.length : len;
         len = (len < 0) ? 0 : len;
@@ -71,7 +71,7 @@ class Phon_stim extends TextStim{
     
 
 
-    static getPairForTrial(len,win,size=1,correct){
+    static getPairForTrial(len,win,correct,size=1){
         let stim_first = new Phon_stim({name:'learn',win:win,len:len});
         let stim_second = new Phon_stim({name:'learn',win:win,len:len});
         stim_second.text = stim_first.text.toLowerCase();

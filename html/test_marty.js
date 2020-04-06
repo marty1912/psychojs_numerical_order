@@ -13,6 +13,7 @@ import {Vs_stim} from './lib/grid_stim.js';
 import {Phon_stim} from './lib/phon_stim.js';
 import {StaircaseScheduler} from './staircase_sheduler.js';
 import {SingleScheduler} from './single_sheduler.js';
+import {DualScheduler} from './dual_sheduler.js';
 
 // init psychoJS:
 const psychoJS = new PsychoJS({
@@ -43,6 +44,8 @@ psychoJS.scheduleCondition(function() { return (psychoJS.gui.dialogComponent.but
 
 // flowScheduler gets run if the participants presses OK
 flowScheduler.add(updateInfo); // add timeStamp
+flowScheduler.add(new DualScheduler(psychoJS,"vis"));
+flowScheduler.add(new DualScheduler(psychoJS,"phon"));
 flowScheduler.add(new SingleScheduler(psychoJS));
 flowScheduler.add(new StaircaseScheduler(psychoJS,"phon"));
 flowScheduler.add(new StaircaseScheduler(psychoJS,"vis"));
