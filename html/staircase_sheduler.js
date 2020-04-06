@@ -11,6 +11,7 @@ import * as visual from './lib/visual-2020.1.js';
 import * as sound from './lib/sound-2020.1.js';
 import {Vs_stim} from './lib/grid_stim.js';
 import {Phon_stim} from './lib/phon_stim.js';
+import {Staircase} from './lib/staircase.js';
 
 
 class StaircaseScheduler extends Scheduler{
@@ -27,6 +28,10 @@ class StaircaseScheduler extends Scheduler{
             this.stim_class =Vs_stim ;
         }
 
+        this.staircase = new Staircase();
+
+        this.add(this.instructionsInit);
+        this.add(this.showInstructions);
         for(let i= 0;i<3;i++)
         {
         this.add(this.loopHead);
@@ -36,28 +41,94 @@ class StaircaseScheduler extends Scheduler{
         this.add(this.saveData);
 
         // start with difficulty 7
-        this.current_difficulty = 7;
+        this.current_difficulty = this.staircase.getCurrentVal();
 
         this.fixation_time_1 = 4;
         this.test_time = 2;
         this.fixation_time_2 = 1;
         this.valid_keys = ['j', 'k'];
         this.correct_key = correct_key;
+
+        this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
     }
 
 
+    instructionsInit(){
+
+    this.instructions = new visual.TextStim({
+    win: this.psychojs.window,
+    name: 'text',
+    text: 'TODO: get instructions here\n press j or k to continue.',
+    font: 'Arial',
+    units: undefined, 
+    pos: [0, 0], height: 0.1,  wrapWidth: undefined, ori: 0,
+    color: new util.Color('black'),  opacity: 1,
+    depth: 0.0 
+  });
+
+    this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
+
+        this.instructions.setAutoDraw(true);
+
+        this.clock.reset();
+
+      return Scheduler.Event.NEXT;
+    }
+
+    showInstructions(){
+
+        let t=this.clock.getTime();
+    let time_adjusted_with_frame= 0
+    let t_keyboard_enable= 3
+
+    time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
+
+    // enable keyboard presses
+    if (t >= t_keyboard_enable && this.keyboard.status === PsychoJS.Status.NOT_STARTED) {
+      // keep track of start time/frame for later
+       
+      console.log("keyboard activated..");
+      this.keyboard.tStart = t;  // (not accounting for frame time here)
+      this.keyboard.frameNStart = this.frameN;  // exact frame index
+      
+        // we do this at window flip for better timing!!
+      this.psychojs.window.callOnFlip(function(clock) { clock.reset(); },this.keyboard.clock);  // t=0 on next screen flip
+      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.start(); },this.keyboard); // start on screen flip
+      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.clearEvents(); },this.keyboard);
+    }
+
+    if (this.keyboard.status === PsychoJS.Status.STARTED) {
+      let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
+        for (let i = 0; i< theseKeys.length ; i++){
+
+            let this_key = theseKeys[i];
+        if( this.valid_keys.includes(this_key.name)){
+            this.instructions.setAutoDraw(false);
+              this.keyboard.stop();
+            
+            return Scheduler.Event.NEXT;
+        }
+        }
+    }
+
+      return Scheduler.Event.FLIP_REPEAT;
+    }
 
     setupTimes(){
 
+        // set an initial fixation but only once
+        this.initial_fixation = (this.initial_fixation == undefined) ? 4 : 0;
+
         this.learn_time = 0.4 * this.stimpair.learn.getDifficulty();
 
-        this.total_loop_time = this.learn_time+this.fixation_time_1+this.test_time+this.fixation_time_2;
+        this.total_loop_time = this.initial_fixation + this.learn_time+this.fixation_time_1+this.test_time+this.fixation_time_2;
 
-        this.t_learn_start = 0;
-        this.t_learn_end = this.learn_time;
+        this.t_learn_start = this.initial_fixation;
+        this.t_learn_end = this.initial_fixation + this.learn_time;
 
-        this.t_test_start = this.learn_time+this.fixation_time_1;
-        this.t_test_end = this.learn_time+this.fixation_time_1+this.test_time;
+        this.t_test_start =this.initial_fixation+ this.learn_time+this.fixation_time_1;
+        this.t_test_end = this.initial_fixation + this.learn_time+this.fixation_time_1+this.test_time;
+        console.log("times: ","fixation: ",this.initial_fixation," learn: ",this.learn_time," total: ",this.total_loop_time);
 
     }
 
@@ -70,7 +141,7 @@ class StaircaseScheduler extends Scheduler{
 
         this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
 
-        this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
+        this.clock.reset();
 
         this.all_pressed_keys = [];
 
@@ -81,7 +152,6 @@ class StaircaseScheduler extends Scheduler{
     loopBodyEachFrame(){
 
     let time_adjusted_with_frame = 0;
-        let total_trial_time = 10;
 
         //------Loop for each frame ------
     let continueRoutine = true; // until we're told otherwise
@@ -149,7 +219,9 @@ class StaircaseScheduler extends Scheduler{
 
 
 
-        if (t > total_trial_time){
+        if (t > this.total_loop_time){
+
+        console.log("next loop..");
             continueRoutine = false;
         }
 
@@ -158,7 +230,8 @@ class StaircaseScheduler extends Scheduler{
     if (continueRoutine) {
       return Scheduler.Event.FLIP_REPEAT;
     } else {
-        this.current_difficulty++;
+
+        console.log("next loop..");
       return Scheduler.Event.NEXT;
     }
 }
@@ -168,6 +241,7 @@ class StaircaseScheduler extends Scheduler{
         this.stimpair.learn.setAutoDraw(false);
         this.stimpair.test.setAutoDraw(false);
 
+        let trial_was_correct = false;
         // get data:
         // TODO!!
         this.psychojs.experiment.addData("len",this.stimpair.learn.getDifficulty());
@@ -183,16 +257,15 @@ class StaircaseScheduler extends Scheduler{
             if( this.valid_keys.includes(pressed_key.name)){
                 if ((pressed_key.name == this.correct_key && this.trial_correct == true) 
                     || (pressed_key.name != this.correct_key && this.trial_correct == false)){
-                // correct response
-                    console.log("------------- correct response -------------");
+                    // correct response
                     this.psychojs.experiment.addData("correct","true");
                     this.psychojs.experiment.addData("rt",pressed_key.rt);
+                    trial_was_correct = true;
                     break;
 
                 }
                 else{
                     // incorrect response
-                    console.log("------------- incorrect response -------------");
                     this.psychojs.experiment.addData("correct","false");
                     this.psychojs.experiment.addData("rt",pressed_key.rt);
                      break;
@@ -206,13 +279,18 @@ class StaircaseScheduler extends Scheduler{
 
         this.psychojs.experiment.nextEntry();
 
+        this.current_difficulty = this.staircase.getNewVal(trial_was_correct);
+
         return Scheduler.Event.NEXT;
 
     }
 
     saveData(){
-        this.psychojs.experiment.save();
+        // TODO check how we will do this!!.
+        // this.psychojs.experiment.save();
+        console.log("experiment: ",this.psychojs.experiment);
     }
+
 
     }
 
