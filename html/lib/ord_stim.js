@@ -15,14 +15,15 @@ class Ord_stim extends TextStim{
     }={}) 
     {
 
-        this.numbers =numbers;
         let text = Ord_stim.getTextFromNumbers(numbers);
 
         super({name:name,win:win,pos:[0,0],opacity:1,text:text});
+
+        this.numbers =numbers;
     }
 
-    getDifficulty(){
-        return this.text.length;
+    getNumbers(){
+        return this.numbers;
     }
 
     // gets the smallest distance between two numbers in the numbers array 
@@ -54,7 +55,7 @@ class Ord_stim extends TextStim{
                     // skip if we have the same element
                     continue;
                 }
-                let distance = abs(numbers[i]-numbers[j]);
+                let distance = Math.abs(numbers[i]-numbers[j]);
                 if (distance < smallest_dist){
                     smallest_dist = distance;
                 }
@@ -65,7 +66,7 @@ class Ord_stim extends TextStim{
 
     // checks if the numbers array is in ascending or descending order.
     static isOrdered(numbers){
-        if (isAscending(numbers) || isDescending(numbers)){
+        if (Ord_stim.isAscending(numbers) || Ord_stim.isDescending(numbers)){
             return true;
         }
         return false;
@@ -105,7 +106,7 @@ class Ord_stim extends TextStim{
         let ret = [];
 
         for (let i = 0; i < xs.length; i = i + 1) {
-            let rest = perm(xs.slice(0, i).concat(xs.slice(i + 1)));
+            let rest = Ord_stim.perm(xs.slice(0, i).concat(xs.slice(i + 1)));
 
             if(!rest.length) {
                 ret.push([xs[i]])
@@ -144,15 +145,17 @@ class Ord_stim extends TextStim{
 
 
 
-    static getStimsForTrial(){
+    static getStimsForTrial(win){
 
         // we have a total of 10 ordered pairs for distance 2
         let ascending_dist2 = [[1,3,5],[2,4,6],[3,5,7],[4,6,8],[5,7,9]]
 
         let descending_dist2 = []
         let unordered_dist2 =  []
-        for(let i=0;i<ascending_dist2;i++){
-            let permutations = perm(ascending_dist2[i]);
+        for(let i=0;i<ascending_dist2.length;i++){
+            let permutations = Ord_stim.perm(ascending_dist2[i]);
+
+            //console.log("(Ord_stim) permutations: ",permutations);
             for(let j= 0; j<permutations.length;j++){
                 if(Ord_stim.isOrdered(permutations[j]) == false){
                     unordered_dist2.push(permutations[j]);
@@ -163,20 +166,23 @@ class Ord_stim extends TextStim{
                 }
             }
         }
-        console.log("all unordered_dist2: ",unordered_dist2);
-        console.log("descending dist2: ",descending_dist2);
+        //console.log("(Ord_stim) all unordered_dist2: ",unordered_dist2);
+        //console.log("(Ord_stim) descending dist2: ",descending_dist2);
         // we only want 10 randomly selected trios from the unordered numbers.
         Ord_stim.shuffle(unordered_dist2);
         unordered_dist2 = unordered_dist2.slice(0,10);
-        console.log("10 random unordered_dist2: ",unordered_dist2);
+        //console.log("(Ord_stim) 10 random unordered_dist2: ",unordered_dist2);
 
         let ascending_dist1 = [[1,2,3],[2,3,4],[3,4,5],[4,5,6],[5,6,7],[6,7,8],[7,8,9]]
         let descending_dist1 = []
         let unordered_dist1 = []
 
-        for(let i=0;i<ascending_dist1;i++){
-            let permutations = perm(ascending_dist1[i]);
+        for(let i=0;i<ascending_dist1.length;i++){
+            let permutations = Ord_stim.perm(ascending_dist1[i]);
+
+            //console.log("(Ord_stim) permutations: ",permutations);
             for(let j= 0; j<permutations.length;j++){
+
                 if(Ord_stim.isOrdered(permutations[j]) == false){
                     unordered_dist1.push(permutations[j]);
                 }
@@ -187,32 +193,58 @@ class Ord_stim extends TextStim{
             }
         }
 
-        console.log("all unordered_dist1: ",unordered_dist1);
-        console.log("descending dist1: ",descending_dist1);
+        //console.log("(Ord_stim) all unordered_dist1: ",unordered_dist1);
+        //console.log("(Ord_stim) descending dist1: ",descending_dist1);
 
         Ord_stim.shuffle(unordered_dist1);
         unordered_dist1 = unordered_dist1.slice(0,10);
-        console.log("10 random unordered_dist1: ",unordered_dist1);
+        //console.log("(Ord_stim) 10 random unordered_dist1: ",unordered_dist1);
 
         Ord_stim.shuffle(ascending_dist1);
-        unordered_dist1 = unordered_dist1.slice(0,5);
-        console.log("5 random ascending_dist1: ",ascending_dist1);
+        ascending_dist1 = ascending_dist1.slice(0,5);
+        //console.log("(Ord_stim) 5 random ascending_dist1: ",ascending_dist1);
 
         Ord_stim.shuffle(descending_dist1);
-        unordered_dist1 = unordered_dist1.slice(0,5);
-        console.log("5 random descending_dist1: ",descending_dist1);
+        descending_dist1 = descending_dist1.slice(0,5);
+        //console.log("(Ord_stim) 5 random descending_dist1: ",descending_dist1);
 
         let all_trios = []
-        all_trios.concat(ascending_dist1);
-        all_trios.concat(ascending_dist2);
-        all_trios.concat(descending_dist1);
-        all_trios.concat(descending_dist2);
-        all_trios.concat(unordered_dist1);
-        all_trios.concat(unordered_dist2);
+       all_trios= all_trios.concat(ascending_dist1);
+       all_trios= all_trios.concat(ascending_dist2);
+all_trios=        all_trios.concat(descending_dist1);
+all_trios=        all_trios.concat(descending_dist2);
+all_trios=        all_trios.concat(unordered_dist1);
+all_trios=        all_trios.concat(unordered_dist2);
 
         // shuffle trios so we get a random order.
         
         Ord_stim.shuffle(all_trios);
+        // debug some statistics:
+        let n_unordered = 0;
+        let n_ascending = 0;
+        let n_descending = 0;
+        let n_distance1 = 0;
+        let n_distance2 = 0;
+        for(let i=0;i<all_trios.length;i++){
+            if(Ord_stim.isOrdered(all_trios[i]) == false){
+                n_unordered++;
+            }
+            if(Ord_stim.isAscending(all_trios[i]) == true){
+                n_ascending++;
+            }
+            if(Ord_stim.isDescending(all_trios[i]) == true){
+                n_descending++;
+            }
+            if(Ord_stim.getDistance(all_trios[i]) == 1){
+                n_distance1++;
+            }
+            if(Ord_stim.getDistance(all_trios[i]) == 2){
+                n_distance2++;
+            }
+
+        }
+        //console.log("(Ord_stim) debug: n_unordered:",n_unordered," n_ascending:",n_ascending," n_descending",n_descending," n_distance1",n_distance1,"n_distance2",n_distance2);
+
             
         let all_stims = [];
         for(let i=0;i<all_trios.length;i++){
@@ -232,4 +264,4 @@ class Ord_stim extends TextStim{
 }
 
 
-export { Phon_stim };
+export { Ord_stim};

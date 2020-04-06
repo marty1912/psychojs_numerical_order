@@ -15,43 +15,59 @@ import {Staircase} from './lib/staircase.js';
 
 
 class StaircaseScheduler extends Scheduler{
-    constructor(psychojs,mode,correct_key='j'){
+    constructor(psychojs,mode="vis",correct_key='j'){
         super(psychojs);
         this.psychojs = psychojs;
         if (mode == "phon")
         {
             this.stim_class = Phon_stim;
         }
-        else
+        else if(mode == "vis")
         {
 
-            this.stim_class =Vs_stim ;
+            this.stim_class = Vs_stim ;
+        }
+        else
+        {
+            throw "invalid mode!"
         }
 
         this.staircase = new Staircase();
+        this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
 
+        this.valid_keys = ['j', 'k'];
+        this.correct_key = correct_key;
+
+        this.setupSchedule();
+
+    }
+
+    // the difficulty will be the mean of all the reversals of the staircase.
+    // Use this function after the staircase procedure has finished!!
+    getDifficulty(){
+        let reversals = this.staircase.getReversals();
+        let sum = 0;
+        for(let i= 0;i<reversals.length;i++){
+            sum+=reversals.val;
+        }
+        let mean = sum/reversals.length;
+
+        return mean;
+    }
+
+    // sets up the schedule of the staircase procedure
+    setupSchedule(){
+        // setup the schedule
         this.add(this.instructionsInit);
         this.add(this.showInstructions);
-        for(let i= 0;i<3;i++)
+        for(let i= 0;i<25;i++)
         {
         this.add(this.loopHead);
         this.add(this.loopBodyEachFrame);
         this.add(this.loopEnd);
         }
         this.add(this.saveData);
-
-        // start with difficulty 7
-        this.current_difficulty = this.staircase.getCurrentVal();
-
-        this.fixation_time_1 = 4;
-        this.test_time = 2;
-        this.fixation_time_2 = 1;
-        this.valid_keys = ['j', 'k'];
-        this.correct_key = correct_key;
-
-        this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
     }
-
 
     instructionsInit(){
 
@@ -116,6 +132,10 @@ class StaircaseScheduler extends Scheduler{
 
     setupTimes(){
 
+        this.fixation_time_1 = 4;
+        this.test_time = 2;
+        this.fixation_time_2 = 1;
+
         // set an initial fixation but only once
         this.initial_fixation = (this.initial_fixation == undefined) ? 4 : 0;
 
@@ -133,6 +153,8 @@ class StaircaseScheduler extends Scheduler{
     }
 
     loopHead(){
+
+        this.current_difficulty = this.staircase.getCurrentVal();
 
         this.trial_correct = false;
         this.stimpair = this.stim_class.getPairForTrial(this.current_difficulty,this.psychojs.window,1.5,this.trial_correct);
