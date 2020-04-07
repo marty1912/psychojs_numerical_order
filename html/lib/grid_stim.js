@@ -39,7 +39,6 @@ class  Grid {
                 name : 'rect'+i, 
                 ori : 0, pos : [this_offset, 0], size : [this_size, size],
                 lineColor: new Color('black'), 
-                fillColor : new Color([0,0,0]), 
                 lineWidth: 2,
                 flipHoriz : false, flipVert : false,
             }) );
@@ -48,7 +47,6 @@ class  Grid {
                 name : 'rect'+i, 
                 ori : 0, pos : [0, -this_offset], size : [size, this_size],
                 lineColor: new Color('black'), 
-                fillColor : new Color([0,0,0]), 
                 lineWidth: 2,
                 flipHoriz : false, flipVert : false,
             }) );
@@ -254,7 +252,7 @@ class Vs_stim extends Grid {
 
     // returns a pair of Vs_stimuli objects to use in our study.
     //
-    static getPairForTrial(n_dots,win,size,correct){
+    static getPairForTrial(n_dots,win,correct,size=1){
         let stim_first = new Vs_stim('learn',win,size);
         stim_first.addRandomDots(n_dots);
         let stim_second = new Vs_stim('test',win,size);
