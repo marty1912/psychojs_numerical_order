@@ -2,16 +2,16 @@
  * Test_Builder Test *
  *********************/
 
-import { PsychoJS } from './lib/core-2020.1.js';
-import * as core from './lib/core-2020.1.js';
-import { TrialHandler } from './lib/data-2020.1.js';
-import { Scheduler } from './lib/util-2020.1.js';
-import * as util from './lib/util-2020.1.js';
-import * as visual from './lib/visual-2020.1.js';
-import * as sound from './lib/sound-2020.1.js';
-import {Vs_stim} from './lib/grid_stim.js';
-import {Phon_stim} from './lib/phon_stim.js';
-import {Staircase} from './lib/staircase.js';
+import { PsychoJS } from './core-2020.1.js';
+import * as core from './core-2020.1.js';
+import { TrialHandler } from './data-2020.1.js';
+import { Scheduler } from './util-2020.1.js';
+import * as util from './util-2020.1.js';
+import * as visual from './visual-2020.1.js';
+import * as sound from './sound-2020.1.js';
+import {Vs_stim} from './grid_stim.js';
+import {Phon_stim} from './phon_stim.js';
+import {Staircase} from './staircase.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
 
 

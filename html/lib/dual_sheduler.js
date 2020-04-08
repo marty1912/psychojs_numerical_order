@@ -1,19 +1,15 @@
-﻿/********************* 
- * Test_Builder Test *
- *********************/
-
-import { PsychoJS } from './lib/core-2020.1.js';
-import * as core from './lib/core-2020.1.js';
-import { TrialHandler } from './lib/data-2020.1.js';
-import { Scheduler } from './lib/util-2020.1.js';
-import * as util from './lib/util-2020.1.js';
-import * as visual from './lib/visual-2020.1.js';
-import * as sound from './lib/sound-2020.1.js';
-import {Ord_stim} from './lib/ord_stim.js';
-import {Phon_stim} from './lib/phon_stim.js';
-import {Vs_stim} from './lib/grid_stim.js';
+﻿import { PsychoJS } from './core-2020.1.js';
+import * as core from './core-2020.1.js';
+import { TrialHandler } from './data-2020.1.js';
+import { Scheduler } from './util-2020.1.js';
+import * as util from './util-2020.1.js';
+import * as visual from './visual-2020.1.js';
+import * as sound from './sound-2020.1.js';
+import {Ord_stim} from './ord_stim.js';
+import {Phon_stim} from './phon_stim.js';
+import {Vs_stim} from './grid_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
-import {Kitchensink} from './lib/kitchensink.js';
+import {SchedulerUtils} from './scheduler_utils.js';
 
 
 class DualScheduler extends Scheduler{
@@ -84,13 +80,13 @@ class DualScheduler extends Scheduler{
 
 
 
-        this.t_dual_pres = Kitchensink.getStartEndTimes(0,this.dual_task_pres_time);
+        this.t_dual_pres = SchedulerUtils.getStartEndTimes(0,this.dual_task_pres_time);
 
-        this.t_present =  Kitchensink.getStartEndTimes(this.t_dual_pres.end+this.fixation_time_1,this.present_time);
+        this.t_present =  SchedulerUtils.getStartEndTimes(this.t_dual_pres.end+this.fixation_time_1,this.present_time);
 
-        this.t_answer = Kitchensink.getStartEndTimes(this.t_present.end,this.answer_time);
+        this.t_answer = SchedulerUtils.getStartEndTimes(this.t_present.end,this.answer_time);
 
-        this.t_dual_answer = Kitchensink.getStartEndTimes(this.t_answer.end,this.dual_answer_time);
+        this.t_dual_answer = SchedulerUtils.getStartEndTimes(this.t_answer.end,this.dual_answer_time);
 
 
         this.total_loop_time = this.dual_task_pres_time +this.fixation_time_1+this.present_time +this.answer_time + this.dual_answer_time + this.fixation_time_2;
@@ -140,13 +136,13 @@ class DualScheduler extends Scheduler{
 
 
         // Activate and deactivate stuff. 
-        Kitchensink.activateAndDeactivateStim(t,this.t_dual_pres.start,this.t_dual_pres.end,this.dual_stims.learn,this.frameN,this.psychojs);
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_pres.start,this.t_dual_pres.end,this.dual_stims.learn,this.frameN,this.psychojs);
         // order task:
-        Kitchensink.activateAndDeactivateStim(t,this.t_present.start,this.t_present.end,this.stim,this.frameN,this.psychojs);
-        Kitchensink.activateAndDeactivateKeyboard(t,this.t_present.start,this.t_answer.end,this.keyboard,this.frameN,this.psychojs);
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_present.start,this.t_present.end,this.stim,this.frameN,this.psychojs);
+        SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_present.start,this.t_answer.end,this.keyboard,this.frameN,this.psychojs);
         // dual task 2nd time:
-        Kitchensink.activateAndDeactivateStim(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_stims.test,this.frameN,this.psychojs);
-        Kitchensink.activateAndDeactivateKeyboard(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_keyboard,this.frameN,this.psychojs);
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_stims.test,this.frameN,this.psychojs);
+        SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_keyboard,this.frameN,this.psychojs);
         
 
         

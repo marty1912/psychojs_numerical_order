@@ -8,7 +8,7 @@ import {Phon_stim} from './phon_stim.js';
 import {Ord_stim} from './ord_stim.js';
 import {Vs_stim} from './grid_stim.js';
 
-class Kitchensink {
+class SchedulerUtils {
 
 
     static checkToAcitvateStim(current_t,start_time,stim,frameIndex){
@@ -33,8 +33,8 @@ class Kitchensink {
 
     }
     static activateAndDeactivateStim(current_t,start_time,end_time,stim,frame_index,psychoJS){
-        Kitchensink.checkToAcitvateStim(current_t,start_time,stim,frame_index);
-        Kitchensink.checkToDeacitvateStim(current_t,end_time,stim,frame_index,psychoJS);
+        SchedulerUtils.checkToAcitvateStim(current_t,start_time,stim,frame_index);
+        SchedulerUtils.checkToDeacitvateStim(current_t,end_time,stim,frame_index,psychoJS);
     }
     static activateAndDeactivateKeyboard(current_t,start_time,end_time,keyboard,frame_index,psychoJS){
         // KEYBOARD handling
@@ -73,4 +73,4 @@ class Kitchensink {
 }
 
 
-export { Kitchensink};
+export { SchedulerUtils};
