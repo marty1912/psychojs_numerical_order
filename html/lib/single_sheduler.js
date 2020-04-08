@@ -7,6 +7,8 @@ import * as visual from './visual-2020.1.js';
 import * as sound from './sound-2020.1.js';
 import {Ord_stim} from './ord_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
+import {FixationStim} from './fixation_stim.js';
+import {SchedulerUtils} from './scheduler_utils.js';
 
 
 class SingleScheduler extends Scheduler{
@@ -62,11 +64,11 @@ class SingleScheduler extends Scheduler{
         return Scheduler.Event.NEXT;
     }
 
+    // sets up the time points for the loop where we enable/disable stimuli.
     setupTimes(){
 
         // set an initial period without fixation but only once
-        this.initial_fixation_time = (this.initial_fixation_time == undefined) ? 4 : 0;
-        
+
         this.fixation_time_1 = 2;
         this.present_time = 0.5;
         this.answer_time = 1.5;
@@ -74,22 +76,23 @@ class SingleScheduler extends Scheduler{
 
 
 
-        this.total_loop_time = this.initial_fixation_time + this.fixation_time_1+this.present_time +this.answer_time+this.fixation_time_2;
+        this.total_loop_time =  this.fixation_time_1+this.present_time +this.answer_time+this.fixation_time_2;
 
-        this.t_present = {start: this.initial_fixation_time+this.fixation_time_1};
-        this.t_present.end = this.t_present.start + this.present_time;
+        this.t_present = SchedulerUtils.getStartEndTimes(this.fixation_time_1,this.present_time);
+        this.t_answer = SchedulerUtils.getStartEndTimes(this.t_present.end,this.answer_time);
 
-        this.t_answer = {start: this.t_present.end};
-        this.t_answer.end = this.t_answer.start + this.answer_time;
-
-        console.log("times: ","fixation: ",this.initial_fixation," learn: ",this.learn_time," total: ",this.total_loop_time);
+        console.log("time total: ",this.total_loop_time);
 
     }
 
+    // loopHead 
+    // this function is run every round of the design. so its loophead - all stimuli in the right order - loopEnd - loophead...
     loopHead(){
 
         this.stim = this.all_stims[this.loop_nr];
 
+
+        this.fixation = FixationStim.getNFixations(this.psychojs.window,4);
 
         this.frameN = 0;
 
@@ -118,39 +121,16 @@ class SingleScheduler extends Scheduler{
 
 
         // stimulus handling.
-        if (t >= this.t_present.start && this.stim.status === PsychoJS.Status.NOT_STARTED) {
-            // keep track of start time/frame for later
-            this.stim.tStart = t;  // (not accounting for frame time here)
-            this.stim.frameNStart = this.frameN;  // exact frame index
+        // fixation
+        SchedulerUtils.activateAndDeactivateStim(t,0,this.t_present.start,this.fixation[0],this.frameN,this.psychojs);
+        // ord stimulus
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_present.start,this.t_present.end,this.stim,this.frameN,this.psychojs);
 
-            this.stim.setAutoDraw(true);
-        }
+        // fixation
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_present.end,this.total_loop_time,this.fixation[1],this.frameN,this.psychojs);
 
-        time_adjusted_with_frame = this.t_present.end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
-        if (this.stim.status === PsychoJS.Status.STARTED && t >= time_adjusted_with_frame) {
-
-            this.stim.setAutoDraw(false);
-        }
-
-        
-        // KEYBOARD handling
-        if (t >= this.t_present.start && this.keyboard.status === PsychoJS.Status.NOT_STARTED) {
-            // keep track of start time/frame for later
-
-            console.log("keyboard activated..");
-            this.keyboard.tStart = t;  // (not accounting for frame time here)
-            this.keyboard.frameNStart = this.frameN;  // exact frame index
-
-            // we do this at window flip for better timing!!
-            this.psychojs.window.callOnFlip(function(clock) { clock.reset(); },this.keyboard.clock);  // t=0 on next screen flip
-            this.psychojs.window.callOnFlip(function(keyboard) { keyboard.start(); },this.keyboard); // start on screen flip
-            this.psychojs.window.callOnFlip(function(keyboard) { keyboard.clearEvents(); },this.keyboard);
-        }
-
-        if (this.keyboard.status === PsychoJS.Status.STARTED && t >= this.t_answer.end) {
-            console.log("keyboard deactivated..");
-            this.keyboard.stop();
-        }
+        //keyboard handling
+        SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_present.start,this.t_answer.end,this.keyboard,this.frameN,this.psychojs);
 
         if (this.keyboard.status === PsychoJS.Status.STARTED) {
             let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
@@ -164,13 +144,7 @@ class SingleScheduler extends Scheduler{
             continueRoutine = false;
         }
 
-            if (this.psychojs.experiment.experimentEnded || this.psychojs.eventManager.getKeys({keyList:['escape']}).length > 0) {
-
-            this.psychojs.window.close();
-              this.psychojs.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
-              return Scheduler.Event.QUIT; 
-            }
-
+        SchedulerUtils.quitOnEscape(this.psychojs);
 
         this.frameN = this.frameN + 1;// number of completed frames (so 0 is the first frame)
         // refresh the screen if continuing
@@ -204,8 +178,8 @@ class SingleScheduler extends Scheduler{
 
             console.log("keyboard keys: ",pressed_key.name);
 
-            
-        // we check for the first key that is a valid key
+
+            // we check for the first key that is a valid key
             // so if somebody pressed "ersdrtj" we only get the rt for the "j" 
             if( this.valid_keys.includes(pressed_key.name)){
                 if ((pressed_key.name == this.correct_key && this.stim.isOrdered() == true) 

@@ -159,9 +159,9 @@ class DualScheduler extends Scheduler{
         SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_stims.test,this.frameN,this.psychojs);
         SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_keyboard,this.frameN,this.psychojs);
         SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_answer.end,this.total_loop_time,this.fixation[3],this.frameN,this.psychojs);
-        
 
-        
+
+
 
         // log key presses:
         // TODO check if we have to do this.
@@ -184,13 +184,7 @@ class DualScheduler extends Scheduler{
             continueRoutine = false;
         }
 
-            if (this.psychojs.experiment.experimentEnded || this.psychojs.eventManager.getKeys({keyList:['escape']}).length > 0) {
-
-            this.psychojs.window.close();
-              this.psychojs.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
-              return Scheduler.Event.QUIT; 
-            }
-
+        SchedulerUtils.quitOnEscape(this.psychojs);
 
         this.frameN = this.frameN + 1;// number of completed frames (so 0 is the first frame)
         // refresh the screen if continuing
@@ -224,7 +218,7 @@ class DualScheduler extends Scheduler{
             loopdata.correct_dual = response_dual.correct;
             loopdata.rt_dual = response_dual.rt;
         }
-        
+
         this.psychojs.experiment.nextEntry();
 
         // our own approach to data stuff.
@@ -256,7 +250,7 @@ class DualScheduler extends Scheduler{
 
             console.log("keyboard keys: ",pressed_key.name);
 
-            
+
             // we check for the first key that is a valid key
             // so if somebody pressed "ersdrtj" we only get the rt for the "j" 
             if( this.valid_keys.includes(pressed_key.name)){

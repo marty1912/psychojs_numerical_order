@@ -7,7 +7,6 @@ import * as sound from './sound-2020.1.js';
 import {Phon_stim} from './phon_stim.js';
 import {Ord_stim} from './ord_stim.js';
 import {Vs_stim} from './grid_stim.js';
-import {FixationStim} from './fixation_stim.js';
 
 class SchedulerUtils {
 
