@@ -10,12 +10,16 @@ import {Phon_stim} from './phon_stim.js';
 import {Vs_stim} from './grid_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
 import {SchedulerUtils} from './scheduler_utils.js';
+import {FixationStim} from './fixation_stim.js';
 
 
 class DualScheduler extends Scheduler{
-    constructor(psychojs,mode="vis",correct_key='j',dual_difficulty=7){
+
+    constructor(psychojs,mode="vis",correct_key='j',dual_difficulty=7,practice=false){
         super(psychojs);
         this.psychojs = psychojs;
+
+        this.practice = practice;
 
         if (mode == "phon")
         {
@@ -50,6 +54,7 @@ class DualScheduler extends Scheduler{
 
         this.loop_nr = 0;
 
+
     }
 
 
@@ -59,7 +64,8 @@ class DualScheduler extends Scheduler{
         this.add(new InstuctionsScheduler(this.psychojs));
 
 
-        for(let i= 0;i<this.all_stims.length;i++)
+        let n_loops = (this.practice) ? SchedulerUtils.PRACTICE_LEN : this.all_stims.length;
+        for(let i= 0 ; i<n_loops ; i++)
         {
             this.add(this.loopHead);
             this.add(this.loopBodyEachFrame);
@@ -100,6 +106,8 @@ class DualScheduler extends Scheduler{
 
         this.stim = this.all_stims[this.loop_nr];
 
+
+        this.fixation = FixationStim.getNFixations(this.psychojs.window,4);
         // random boolean
         this.dual_task_correct = Math.random() >= 0.5; 
         this.dual_stims = this.dual_stim_class.getPairForTrial(this.dual_difficulty,this.psychojs.window,this.dual_task_correct);
@@ -136,13 +144,21 @@ class DualScheduler extends Scheduler{
 
 
         // Activate and deactivate stuff. 
+        // fixation
+        SchedulerUtils.activateAndDeactivateStim(t,0,this.t_dual_pres.start,this.fixation[0],this.frameN,this.psychojs);
+        // dual task
         SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_pres.start,this.t_dual_pres.end,this.dual_stims.learn,this.frameN,this.psychojs);
+        // fixation
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_pres.end,this.t_present.start,this.fixation[1],this.frameN,this.psychojs);
         // order task:
         SchedulerUtils.activateAndDeactivateStim(t,this.t_present.start,this.t_present.end,this.stim,this.frameN,this.psychojs);
         SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_present.start,this.t_answer.end,this.keyboard,this.frameN,this.psychojs);
+        // fixation
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_present.end,this.t_answer.end,this.fixation[2],this.frameN,this.psychojs);
         // dual task 2nd time:
         SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_stims.test,this.frameN,this.psychojs);
         SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_dual_answer.start,this.t_dual_answer.end,this.dual_keyboard,this.frameN,this.psychojs);
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_dual_answer.end,this.total_loop_time,this.fixation[3],this.frameN,this.psychojs);
         
 
         

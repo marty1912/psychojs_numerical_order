@@ -1,8 +1,4 @@
-﻿/********************* 
- * Test_Builder Test *
- *********************/
-
-import { PsychoJS } from './core-2020.1.js';
+﻿import { PsychoJS } from './core-2020.1.js';
 import * as core from './core-2020.1.js';
 import { TrialHandler } from './data-2020.1.js';
 import { Scheduler } from './util-2020.1.js';
@@ -14,11 +10,12 @@ import {InstuctionsScheduler} from './instructions_sheduler.js';
 
 
 class SingleScheduler extends Scheduler{
-    constructor(psychojs,rig=false,correct_key='j'){
+    constructor(psychojs,rig=false,correct_key='j',practice=false){
         super(psychojs);
         this.psychojs = psychojs;
 
 
+        this.practice = practice;
         this.rig = rig;
 
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
@@ -46,7 +43,8 @@ class SingleScheduler extends Scheduler{
 
         this.add(this.initRig);
 
-        for(let i= 0;i<this.all_stims.length;i++)
+        let n_loops = (this.practice) ? SchedulerUtils.PRACTICE_LEN : this.all_stims.length;
+        for(let i= 0 ; i<n_loops ; i++)
         {
             this.add(this.loopHead);
             this.add(this.loopBodyEachFrame);

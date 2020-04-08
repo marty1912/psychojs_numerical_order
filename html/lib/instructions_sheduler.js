@@ -1,14 +1,12 @@
-﻿/********************* 
- * Test_Builder Test *
- *********************/
-
-import { PsychoJS } from './core-2020.1.js';
+﻿import { PsychoJS } from './core-2020.1.js';
 import * as core from './core-2020.1.js';
 import { TrialHandler } from './data-2020.1.js';
 import { Scheduler } from './util-2020.1.js';
 import * as util from './util-2020.1.js';
 import * as visual from './visual-2020.1.js';
 import * as sound from './sound-2020.1.js';
+import {SchedulerUtils} from './scheduler_utils.js';
+import {FixationStim} from './fixation_stim.js';
 
 
 class InstuctionsScheduler extends Scheduler{
@@ -27,6 +25,8 @@ class InstuctionsScheduler extends Scheduler{
 
         this.setupSchedule();
 
+        this.fixation = new FixationStim({win:this.psychojs.window});
+
     }
 
 
@@ -36,73 +36,71 @@ class InstuctionsScheduler extends Scheduler{
         this.add(this.instructionsInit);
         this.add(this.showInstructions);
         this.add(this.showFixation);
-            }
+    }
 
     instructionsInit(){
 
-    this.instructions = new visual.TextStim({
-    win: this.psychojs.window,
-    name: 'text',
-    text: this.text,
-    font: 'Arial',
-    units: undefined, 
-    pos: [0, 0], height: 0.1,  wrapWidth: undefined, ori: 0,
-    color: new util.Color('black'),  opacity: 1,
-    depth: 0.0 
-  });
+        this.instructions = new visual.TextStim({
+            win: this.psychojs.window,
+            name: 'text',
+            text: this.text,
+            font: 'Arial',
+            units: undefined, 
+            pos: [0, 0], height: 0.1,  wrapWidth: undefined, ori: 0,
+            color: new util.Color('black'),  opacity: 1,
+            depth: 0.0 
+        });
 
-    this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
+        this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
 
-    this.instructions.setAutoDraw(true);
+        this.instructions.setAutoDraw(true);
 
-    this.clock.reset();
+        this.clock.reset();
 
-      return Scheduler.Event.NEXT;
+        return Scheduler.Event.NEXT;
     }
 
     showInstructions(){
 
         let t=this.clock.getTime();
-    let time_adjusted_with_frame= 0
-    let t_keyboard_enable= 3
+        let time_adjusted_with_frame= 0
+        let t_keyboard_enable= 3
 
-    time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
+        time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
 
-    // enable keyboard presses
-    if (t >= t_keyboard_enable && this.keyboard.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-       
-      console.log("keyboard activated..");
-      this.keyboard.tStart = t;  // (not accounting for frame time here)
-      this.keyboard.frameNStart = this.frameN;  // exact frame index
-      
-        // we do this at window flip for better timing!!
-      this.psychojs.window.callOnFlip(function(clock) { clock.reset(); },this.keyboard.clock);  // t=0 on next screen flip
-      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.start(); },this.keyboard); // start on screen flip
-      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.clearEvents(); },this.keyboard);
-    }
+        // enable keyboard presses
+        if (t >= t_keyboard_enable && this.keyboard.status === PsychoJS.Status.NOT_STARTED) {
+            // keep track of start time/frame for later
 
-    if (this.keyboard.status === PsychoJS.Status.STARTED) {
-      let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
-        for (let i = 0; i< theseKeys.length ; i++){
+            console.log("keyboard activated..");
+            this.keyboard.tStart = t;  // (not accounting for frame time here)
+            this.keyboard.frameNStart = this.frameN;  // exact frame index
 
-            let this_key = theseKeys[i];
-        if( this.valid_keys.includes(this_key.name)){
-            this.instructions.setAutoDraw(false);
-              this.keyboard.stop();
-            
-            return Scheduler.Event.NEXT;
+            // we do this at window flip for better timing!!
+            this.psychojs.window.callOnFlip(function(clock) { clock.reset(); },this.keyboard.clock);  // t=0 on next screen flip
+            this.psychojs.window.callOnFlip(function(keyboard) { keyboard.start(); },this.keyboard); // start on screen flip
+            this.psychojs.window.callOnFlip(function(keyboard) { keyboard.clearEvents(); },this.keyboard);
         }
-        }
-    }
 
+        if (this.keyboard.status === PsychoJS.Status.STARTED) {
+            let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
+            for (let i = 0; i< theseKeys.length ; i++){
 
-            if (this.psychojs.experiment.experimentEnded || this.psychojs.eventManager.getKeys({keyList:['escape']}).length > 0) {
-            this.psychojs.window.close();
-              this.psychojs.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
-              return Scheduler.Event.QUIT; 
+                let this_key = theseKeys[i];
+                if( this.valid_keys.includes(this_key.name)){
+                    this.instructions.setAutoDraw(false);
+                    this.keyboard.stop();
+
+                    this.clock.reset();
+                    return Scheduler.Event.NEXT;
+                }
             }
-      return Scheduler.Event.FLIP_REPEAT;
+        }
+
+
+        SchedulerUtils.quitOnEscape(this.psychojs); 
+
+        return Scheduler.Event.FLIP_REPEAT;
     }
 
     showFixation(){
@@ -117,12 +115,10 @@ class InstuctionsScheduler extends Scheduler{
             continueRoutine = false;
         }
 
-            if (this.psychojs.experiment.experimentEnded || this.psychojs.eventManager.getKeys({keyList:['escape']}).length > 0) {
-            this.psychojs.window.close();
-              this.psychojs.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
-              return Scheduler.Event.QUIT; 
-            }
+        SchedulerUtils.activateAndDeactivateStim(t,0,this.fixation_time,this.fixation,this.frameN,this.psychojs);
 
+        SchedulerUtils.quitOnEscape(this.psychojs); 
+        
 
         this.frameN = this.frameN + 1;// number of completed frames (so 0 is the first frame)
         // refresh the screen if continuing
@@ -133,8 +129,8 @@ class InstuctionsScheduler extends Scheduler{
         }
     }
 
-    
-    }
+
+}
 
 
 export {InstuctionsScheduler};

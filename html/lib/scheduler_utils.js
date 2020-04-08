@@ -7,13 +7,14 @@ import * as sound from './sound-2020.1.js';
 import {Phon_stim} from './phon_stim.js';
 import {Ord_stim} from './ord_stim.js';
 import {Vs_stim} from './grid_stim.js';
+import {FixationStim} from './fixation_stim.js';
 
 class SchedulerUtils {
 
-
+    
     static checkToAcitvateStim(current_t,start_time,stim,frameIndex){
         if (current_t >= start_time && stim.status === PsychoJS.Status.NOT_STARTED) {
-            console.log("stim activated: t: ",current_t);
+            console.log("stim: ",stim.name,", activated: t: ",current_t);
             // keep track of start time/frame for later
             stim.tStart = current_t;  // (not accounting for frame time here)
             stim.frameNStart = frameIndex;  // exact frame index
@@ -26,12 +27,32 @@ class SchedulerUtils {
         let time_adjusted_with_frame = end_time - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
         if (stim.status === PsychoJS.Status.STARTED && current_t >= time_adjusted_with_frame) {
 
+            console.log("stim: ",stim.name,", deactivated: t: ",current_t);
+            stim.setAutoDraw(false);
+        }
+
+
+    }
+    /*
+    static activateAndDeactivateStim(current_t,start_time,end_time,stim,frame_index,psychoJS){
+        let time_adjusted_with_frame = end_time - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
+        if ((current_t >= start_time && current_t < time_adjusted_with_frame) &&
+            ( stim.status === PsychoJS.Status.NOT_STARTED || stim.status === PsychoJS.Status.STOPPED)) {
+            console.log("stim activated: t: ",current_t);
+            // keep track of start time/frame for later
+            stim.tStart = current_t;  // (not accounting for frame time here)
+            stim.frameNStart = frame_index;  // exact frame index
+
+            stim.setAutoDraw(true);
+        }
+        else if (stim.status === PsychoJS.Status.STARTED && current_t >= time_adjusted_with_frame) {
             console.log("stim deactivated: t: ",current_t);
             stim.setAutoDraw(false);
         }
 
 
     }
+    */
     static activateAndDeactivateStim(current_t,start_time,end_time,stim,frame_index,psychoJS){
         SchedulerUtils.checkToAcitvateStim(current_t,start_time,stim,frame_index);
         SchedulerUtils.checkToDeacitvateStim(current_t,end_time,stim,frame_index,psychoJS);
@@ -66,6 +87,15 @@ class SchedulerUtils {
     }
     
 
+    // checks for escape pressed and closes the window automatically if so.
+    static quitOnEscape(psychoJS){
+        if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
+            psychoJS.window.close();
+            psychoJS.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
+            return true; 
+        }
+        return false;
+    }
 
 
 
@@ -73,4 +103,5 @@ class SchedulerUtils {
 }
 
 
-export { SchedulerUtils};
+export { SchedulerUtils, };
+const PRACTICE_LEN = 2;
