@@ -30,7 +30,8 @@ class  Staircase {
     // setter for currentval. clamps between min and max val
         // @param val: the new value
     setCurrentVal(val){
-        this.current_val = Math.clamp(val,this.min_val,this.max_val); 
+        // clamps the value between the min and max
+this.current_val = Math.max(this.min_val, Math.min(val, this.max_val));
     }
     // getNewVal(trial_correct)
     // calculates the next value of the staircase. 
@@ -47,19 +48,19 @@ class  Staircase {
             if(this.data.length == 1){
                 // first response
                 this.direction = (trial_correct) ? +1 :-1
-                this.setCurrenVal(this.current_val + this.direction);
+                this.setCurrentVal(this.current_val + this.direction);
                 return this.current_val
             }
             if(this.data[this.data.length-2].correct == this.data[this.data.length-1].correct){
                 this.direction = (trial_correct) ? +1 :-1
-                this.setCurrenVal(this.current_val + this.direction);
+                this.setCurrentVal(this.current_val + this.direction);
                 return this.current_val
             }
             else
             {
                 this.reversals.push({val:this.current_val,correct:trial_correct});
                 this.direction = (trial_correct) ? +1 :-1
-                this.setCurrenVal(this.current_val + this.direction);
+                this.setCurrentVal(this.current_val + this.direction);
                 return this.current_val
             }
 
@@ -78,7 +79,7 @@ class  Staircase {
             }
             if (this.correct_streak == this.n_up){
                 this.correct_streak = 0;
-                this.setCurrenVal(this.current_val + 1);
+                this.setCurrentVal(this.current_val + 1);
                 if(this.direction == -1){
                 this.reversals.push({val:this.current_val,correct:trial_correct});
                     this.direction = +1;
@@ -86,7 +87,7 @@ class  Staircase {
             }
             if (this.incorrect_streak == this.n_down){
                 this.incorrect_streak = 0;
-                this.setCurrenVal(this.current_val - 1);
+                this.setCurrentVal(this.current_val - 1);
                 if(this.direction == +1){
                 this.reversals.push({val:this.current_val,correct:trial_correct});
                     this.direction = -1;

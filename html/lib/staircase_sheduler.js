@@ -1,8 +1,4 @@
-﻿/********************* 
- * Test_Builder Test *
- *********************/
-
-import { PsychoJS } from './core-2020.1.js';
+﻿import { PsychoJS } from './core-2020.1.js';
 import * as core from './core-2020.1.js';
 import { TrialHandler } from './data-2020.1.js';
 import { Scheduler } from './util-2020.1.js';
@@ -13,8 +9,11 @@ import {Vs_stim} from './grid_stim.js';
 import {Phon_stim} from './phon_stim.js';
 import {Staircase} from './staircase.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
+import {SchedulerUtils} from './scheduler_utils.js';
+import {FixationStim} from './fixation_stim.js';
 
 
+// class to handle the schedule of our staircase procedure. used in the "main"
 class StaircaseScheduler extends Scheduler{
     constructor(psychojs,mode="vis",correct_key='j'){
         super(psychojs);
@@ -62,31 +61,29 @@ class StaircaseScheduler extends Scheduler{
         this.add(new InstuctionsScheduler(this.psychojs));
         for(let i= 0;i<25;i++)
         {
-        this.add(this.loopHead);
-        this.add(this.loopBodyEachFrame);
-        this.add(this.loopEnd);
+            this.add(this.loopHead);
+            this.add(this.loopBodyEachFrame);
+            this.add(this.loopEnd);
         }
         this.add(this.saveData);
     }
 
-     setupTimes(){
+    // sets up the timepoints for the loop.
+    setupTimes(){
+
 
         this.fixation_time_1 = 4;
         this.test_time = 2;
         this.fixation_time_2 = 1;
 
-        // set an initial fixation but only once
-        this.initial_fixation = (this.initial_fixation == undefined) ? 4 : 0;
-
         this.learn_time = 0.4 * this.stimpair.learn.getDifficulty();
 
-        this.total_loop_time = this.initial_fixation + this.learn_time+this.fixation_time_1+this.test_time+this.fixation_time_2;
+        this.total_loop_time =  this.learn_time+this.fixation_time_1+this.test_time+this.fixation_time_2;
 
-        this.t_learn_start = this.initial_fixation;
-        this.t_learn_end = this.initial_fixation + this.learn_time;
+        this.t_learn = SchedulerUtils.getStartEndTimes(0,this.learn_time);
 
-        this.t_test_start =this.initial_fixation+ this.learn_time+this.fixation_time_1;
-        this.t_test_end = this.initial_fixation + this.learn_time+this.fixation_time_1+this.test_time;
+        this.t_test = SchedulerUtils.getStartEndTimes(this.t_learn.end+this.fixation_time_1,this.test_time);
+
         console.log("times: ","fixation: ",this.initial_fixation," learn: ",this.learn_time," total: ",this.total_loop_time);
 
     }
@@ -101,6 +98,7 @@ class StaircaseScheduler extends Scheduler{
 
         this.setupTimes();
 
+        this.fixation = FixationStim.getNFixations(this.psychojs.window,2);
         this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
 
         this.clock.reset();
@@ -113,97 +111,49 @@ class StaircaseScheduler extends Scheduler{
 
     loopBodyEachFrame(){
 
-    let time_adjusted_with_frame = 0;
+        let time_adjusted_with_frame = 0;
 
         //------Loop for each frame ------
-    let continueRoutine = true; // until we're told otherwise
-    // get current time
-    let t = this.clock.getTime();
-    this.frameN = this.frameN + 1;// number of completed frames (so 0 is the first frame)
-    // update/draw components on each frame
-    
-    if (t >= this.t_learn_start && this.stimpair.learn.status === PsychoJS.Status.NOT_STARTED) {
-        console.log("this.stimpair.learn activated..");
-      // keep track of start time/frame for later
-      this.stimpair.learn.tStart = t;  // (not accounting for frame time here)
-      this.stimpair.learn.frameNStart = this.frameN;  // exact frame index
-      
-      this.stimpair.learn.setAutoDraw(true);
-    }
-
-        // TODO set time before so we dont call anything each frame..
-    time_adjusted_with_frame = this.t_learn_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
-    if (this.stimpair.learn.status === PsychoJS.Status.STARTED && t >= time_adjusted_with_frame) {
-
-      this.stimpair.learn.setAutoDraw(false);
-    }
+        let continueRoutine = true; // until we're told otherwise
+        // get current time
+        let t = this.clock.getTime();
+        this.frameN = this.frameN + 1;// number of completed frames (so 0 is the first frame)
+        // update/draw components on each frame
 
 
-    if (t >= this.t_test_start && this.stimpair.test.status === PsychoJS.Status.NOT_STARTED) {
-        console.log("this.stimpair.test acticated..");
-      // keep track of start time/frame for later
-      this.stimpair.test.tStart = t;  // (not accounting for frame time here)
-      this.stimpair.test.frameNStart = this.frameN;  // exact frame index
-      
-      this.stimpair.test.setAutoDraw(true);
-    }
-
-    time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
-    if (this.stimpair.test.status === PsychoJS.Status.STARTED && t >= time_adjusted_with_frame) {
-
-      this.stimpair.test.setAutoDraw(false);
-    }
-
-    // enable keyboard presses
-    if (t >= this.t_test_start && this.keyboard.status === PsychoJS.Status.NOT_STARTED) {
-      // keep track of start time/frame for later
-       
-      console.log("keyboard activated..");
-      this.keyboard.tStart = t;  // (not accounting for frame time here)
-      this.keyboard.frameNStart = this.frameN;  // exact frame index
-      
-        // we do this at window flip for better timing!!
-      this.psychojs.window.callOnFlip(function(clock) { clock.reset(); },this.keyboard.clock);  // t=0 on next screen flip
-      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.start(); },this.keyboard); // start on screen flip
-      this.psychojs.window.callOnFlip(function(keyboard) { keyboard.clearEvents(); },this.keyboard);
-    }
-
-    time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
-    if (this.keyboard.status === PsychoJS.Status.STARTED && t >= time_adjusted_with_frame) {
-      this.keyboard.stop();
-    }
-
-    if (this.keyboard.status === PsychoJS.Status.STARTED) {
-      let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
-      this.all_pressed_keys = this.all_pressed_keys.concat(theseKeys);
-    }
+        // stimulus learn
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_learn.start,this.t_learn.end,this.stimpair.learn,this.frameN,this.psychojs);
+        // fixation1
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_learn.end,this.t_test.start,this.fixation[0],this.frameN,this.psychojs);
+        // stimulus test
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_test.start,this.t_test.end,this.stimpair.test,this.frameN,this.psychojs);
+        // fixation
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_test.end,this.total_loop_time,this.fixation[1],this.frameN,this.psychojs);
 
 
+        // handle keyboard.
+        SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_test.start,this.t_test.end,this.keyboard,this.frameN,this.psychojs);
 
-
-        if (t > this.total_loop_time){
-
-        console.log("next loop..");
-            continueRoutine = false;
+        if (this.keyboard.status === PsychoJS.Status.STARTED) {
+            let theseKeys = this.keyboard.getKeys({keyList: this.valid_keys, waitRelease: false});
+            this.all_pressed_keys = this.all_pressed_keys.concat(theseKeys);
         }
 
-            if (this.psychojs.experiment.experimentEnded || this.psychojs.eventManager.getKeys({keyList:['escape']}).length > 0) {
-            this.psychojs.window.close();
-              this.psychojs.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
-              return Scheduler.Event.QUIT;
-
-            }
 
 
-    // refresh the screen if continuing
-    if (continueRoutine) {
-      return Scheduler.Event.FLIP_REPEAT;
-    } else {
 
-        console.log("next loop..");
-      return Scheduler.Event.NEXT;
+
+        SchedulerUtils.quitOnEscape(this.psychojs);
+        
+
+        if (t > this.total_loop_time) {
+            console.log("next loop..");
+            return Scheduler.Event.NEXT;
+        } else {
+
+            return Scheduler.Event.FLIP_REPEAT;
+        }
     }
-}
 
     loopEnd(){
         // and now the loop has ended
@@ -221,7 +171,7 @@ class StaircaseScheduler extends Scheduler{
 
             let pressed_key = this.all_pressed_keys[i];
 
-              console.log("keyboard keys: ",pressed_key.name);
+            console.log("keyboard keys: ",pressed_key.name);
 
             if( this.valid_keys.includes(pressed_key.name)){
                 if ((pressed_key.name == this.correct_key && this.trial_correct == true) 
@@ -237,14 +187,14 @@ class StaircaseScheduler extends Scheduler{
                     // incorrect response
                     this.psychojs.experiment.addData("correct","false");
                     this.psychojs.experiment.addData("rt",pressed_key.rt);
-                     break;
+                    break;
 
                 }
 
             }
 
         }
-        
+
 
         this.psychojs.experiment.nextEntry();
 
@@ -261,7 +211,7 @@ class StaircaseScheduler extends Scheduler{
     }
 
 
-    }
+}
 
 
 export {StaircaseScheduler};
