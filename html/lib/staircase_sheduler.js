@@ -11,6 +11,7 @@ import {Staircase} from './staircase.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
 import {SchedulerUtils} from './scheduler_utils.js';
 import {FixationStim} from './fixation_stim.js';
+import * as constants from './constants.js';
 
 
 // class to handle the schedule of our staircase procedure. used in the "main"
@@ -20,6 +21,7 @@ class StaircaseScheduler extends Scheduler{
         this.psychojs = psychojs;
         this.mode = mode;
         this.debug = debug;
+        this.practice= practice;
         if (mode == "phon")
         {
             this.stim_class = Phon_stim;
@@ -64,8 +66,12 @@ class StaircaseScheduler extends Scheduler{
     // sets up the schedule of the staircase procedure
     setupSchedule(){
         // setup the schedule
-        this.add(new InstuctionsScheduler(this.psychojs));
-        for(let i= 0;i<25;i++)
+        
+        let instruction_text = SchedulerUtils.getInstructionsText(this);
+        this.add(new InstuctionsScheduler({psychojs:this.psychojs,text:instruction_text}));
+
+        let n_trials = (this.practice)? constants.PRACTICE_LEN : 25;
+        for(let i= 0;i<n_trials;i++)
         {
             this.add(this.loopHead);
             this.add(this.loopBodyEachFrame);

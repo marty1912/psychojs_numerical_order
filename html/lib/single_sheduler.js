@@ -9,7 +9,7 @@ import {Ord_stim} from './ord_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
 import {FixationStim} from './fixation_stim.js';
 import {SchedulerUtils} from './scheduler_utils.js';
-
+import * as constants from './constants.js';
 
 class SingleScheduler extends Scheduler{
     constructor({psychojs,prob_code,rig=false,correct_key='j',practice=false,debug=false}){
@@ -57,11 +57,14 @@ class SingleScheduler extends Scheduler{
 
         }
         else{
-        this.add(new InstuctionsScheduler(this.psychojs));
+
+        let instruction_text = SchedulerUtils.getInstructionsText(this);
+
+        this.add(new InstuctionsScheduler({psychojs:this.psychojs,text:instruction_text}));
 
         this.add(this.initRig);
 
-        let n_loops = (this.practice) ? SchedulerUtils.PRACTICE_LEN : this.all_stims.length;
+        let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
         for(let i= 0 ; i<n_loops ; i++)
         {
             this.add(this.loopHead);

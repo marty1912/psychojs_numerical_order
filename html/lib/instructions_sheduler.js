@@ -10,7 +10,7 @@ import {FixationStim} from './fixation_stim.js';
 
 
 class InstuctionsScheduler extends Scheduler{
-    constructor(psychojs,text="TODO: get instructions here\n press j or k to continue.",correct_key='j',pause_after=4){
+    constructor({psychojs,text="TODO: get instructions here\n press j or k to continue.",correct_key='j',pause_after=4}){
         super(psychojs);
         this.psychojs = psychojs;
         this.text = text;

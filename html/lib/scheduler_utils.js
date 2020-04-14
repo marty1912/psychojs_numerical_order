@@ -7,6 +7,10 @@ import * as sound from './sound-2020.1.js';
 import {Phon_stim} from './phon_stim.js';
 import {Ord_stim} from './ord_stim.js';
 import {Vs_stim} from './grid_stim.js';
+import {StaircaseScheduler} from './staircase_sheduler.js';
+import {DualScheduler} from './dual_sheduler.js';
+import {SingleScheduler} from './single_sheduler.js';
+import * as constants from './constants.js';
 
 class SchedulerUtils {
 
@@ -145,10 +149,127 @@ class SchedulerUtils {
 
     }
 
+    static getInstructionsText(sched){
+        if(sched instanceof StaircaseScheduler)
+        {
+            if (sched.correct_key =='j'){
+                if(sched.mode == 'vis'){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_STAIR_VIS_J_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_STAIR_VIS_J;
+                    }
+                }
+                else if(sched.mode == 'phon'){
+                    if(sched.practice){
+                        return  constants.INSTRUCTION_STAIR_PHON_J_PRACTICE;
+                    }else{
+                        return constants.INSTRUCTION_STAIR_PHON_J;
+                    }
+                }
+            }else{
+                if(sched.mode == 'vis'){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_STAIR_VIS_K_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_STAIR_VIS_K;
+                    }
+                }
+                else if(sched.mode == 'phon'){
+                    if(sched.practice){
+                        return  constants.INSTRUCTION_STAIR_PHON_K_PRACTICE;
+                    }else{
+                        return constants.INSTRUCTION_STAIR_PHON_K;
+                    }
+                }
+
+            }
+        }
+        else if(sched instanceof DualScheduler)
+        {
+            if (sched.correct_key =='j'){
+                if(sched.mode == 'vis'){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_DUAL_VIS_J_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_DUAL_VIS_J;
+                    }
+                }
+                else if(sched.mode == 'phon'){
+                    if(sched.practice){
+                        return  constants.INSTRUCTION_DUAL_PHON_J_PRACTICE;
+                    }else{
+                        return constants.INSTRUCTION_DUAL_PHON_J;
+                    }
+                }
+
+            }else{
+                if(sched.mode == 'vis'){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_DUAL_VIS_K_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_DUAL_VIS_K;
+                    }
+                }
+                else if(sched.mode == 'phon'){
+                    if(sched.practice){
+                        return  constants.INSTRUCTION_DUAL_PHON_K_PRACTICE;
+                    }else{
+                        return constants.INSTRUCTION_DUAL_PHON_K;
+                    }
+                }
+
+
+            }
+       
+
+
+        }
+        else if(sched instanceof SingleScheduler)
+        {
+            if (sched.correct_key =='j'){
+                if(sched.rig == true){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_RIG_J_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_RIG_J;
+                    }
+                }
+                else if(sched.rig == false){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_SINGLE_J_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_SINGLE_J;
+                    }
+
+                }
+
+
+            }else{
+                if(sched.rig == true){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_RIG_K_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_RIG_K;
+                    }
+                }
+                else if(sched.rig == false){
+                    if(sched.practice){
+                        return constants.INSTRUCTION_SINGLE_K_PRACTICE;
+                    }else{
+                        return  constants.INSTRUCTION_SINGLE_K;
+                    }
+
+                }
+
+
+
+            }
+        }
+
+        return "could not determine correct instruction text.";
+    }
+
 
 }
-
-
 export { SchedulerUtils, };
-const PRACTICE_LEN = 2;
-export const KEYS_ACCEPT_DECLINE = ['j','k'];

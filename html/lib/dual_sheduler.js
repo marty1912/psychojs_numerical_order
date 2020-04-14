@@ -11,7 +11,7 @@ import {Vs_stim} from './grid_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
 import {SchedulerUtils} from './scheduler_utils.js';
 import {FixationStim} from './fixation_stim.js';
-
+import * as constants from './constants.js';
 
 class DualScheduler extends Scheduler{
 
@@ -62,10 +62,10 @@ class DualScheduler extends Scheduler{
     // sets up the schedule of the staircase procedure
     setupSchedule(){
         // setup the schedule
-        this.add(new InstuctionsScheduler(this.psychojs));
+        let instruction_text = SchedulerUtils.getInstructionsText(this);
+        this.add(new InstuctionsScheduler({psychojs:this.psychojs,text:instruction_text}));
 
-
-        let n_loops = (this.practice) ? SchedulerUtils.PRACTICE_LEN : this.all_stims.length;
+        let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
         for(let i= 0 ; i<n_loops ; i++)
         {
             this.add(this.loopHead);
