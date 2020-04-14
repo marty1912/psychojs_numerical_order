@@ -12,9 +12,10 @@ import {SchedulerUtils} from './scheduler_utils.js';
 
 
 class SingleScheduler extends Scheduler{
-    constructor(psychojs,rig=false,correct_key='j',practice=false){
+    constructor({psychojs,rig=false,correct_key='j',practice=false,debug=false}){
         super(psychojs);
         this.psychojs = psychojs;
+        this.debug = debug;
 
 
         this.practice = practice;
@@ -41,6 +42,20 @@ class SingleScheduler extends Scheduler{
     // sets up the schedule of the staircase procedure
     setupSchedule(){
         // setup the schedule
+        if (this.debug){
+            this.add(this.initRig);
+
+        let n_loops = 1;
+        for(let i= 0 ; i<n_loops ; i++)
+        {
+            this.add(this.loopHead);
+            this.add(this.loopBodyEachFrame);
+            this.add(this.loopEnd);
+        }
+        this.add(this.saveData);
+
+        }
+        else{
         this.add(new InstuctionsScheduler(this.psychojs));
 
         this.add(this.initRig);
@@ -53,6 +68,7 @@ class SingleScheduler extends Scheduler{
             this.add(this.loopEnd);
         }
         this.add(this.saveData);
+        }
     }
 
     // enable RIG task.
@@ -73,6 +89,13 @@ class SingleScheduler extends Scheduler{
         this.present_time = 0.5;
         this.answer_time = 1.5;
         this.fixation_time_2 = 1;
+
+        if (this.debug){
+            this.fixation_time_1 = 0.1;
+            this.present_time = 0.1;
+            this.answer_time = 0.1;
+            this.fixation_time_2 = 0.1;
+        }
 
 
 
@@ -224,6 +247,8 @@ class SingleScheduler extends Scheduler{
         console.log("experiment: ",this.psychojs.experiment);
         // TODO upload to Server. we will probably have to do this ourselves..
         console.log("data:",this.data);
+
+        SchedulerUtils.upload(this.data);
 
         // we can do this at the very end to get all the rig data
         let rig_keys = this.rig_keyboard.getKeys({keyList: this.rig_keys, waitRelease: false});

@@ -40,9 +40,9 @@ psychoJS.scheduleCondition(function() { return (psychoJS.gui.dialogComponent.but
 
 // flowScheduler gets run if the participants presses OK
 flowScheduler.add(updateInfo); // add timeStamp
+flowScheduler.add(new SingleScheduler({psychojs: psychoJS,debug:true}));
 flowScheduler.add(new StaircaseScheduler(psychoJS,"phon"));
 flowScheduler.add(new StaircaseScheduler(psychoJS,"vis"));
-flowScheduler.add(new SingleScheduler(psychoJS));
 flowScheduler.add(new DualScheduler(psychoJS,"phon"));
 flowScheduler.add(new DualScheduler(psychoJS,"vis"));
 flowScheduler.add(experimentInit);
