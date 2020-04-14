@@ -12,10 +12,11 @@ import {SchedulerUtils} from './scheduler_utils.js';
 
 
 class SingleScheduler extends Scheduler{
-    constructor({psychojs,rig=false,correct_key='j',practice=false,debug=false}){
+    constructor({psychojs,prob_code,rig=false,correct_key='j',practice=false,debug=false}){
         super(psychojs);
         this.psychojs = psychojs;
         this.debug = debug;
+        this.prob_code = prob_code;
 
 
         this.practice = practice;
@@ -248,7 +249,9 @@ class SingleScheduler extends Scheduler{
         // TODO upload to Server. we will probably have to do this ourselves..
         console.log("data:",this.data);
 
-        SchedulerUtils.upload(this.data);
+        let trial = "single";
+
+        SchedulerUtils.upload(this.data,trial,this.prob_code);
 
         // we can do this at the very end to get all the rig data
         let rig_keys = this.rig_keyboard.getKeys({keyList: this.rig_keys, waitRelease: false});
