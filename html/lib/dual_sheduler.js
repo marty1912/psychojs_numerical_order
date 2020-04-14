@@ -15,11 +15,12 @@ import {FixationStim} from './fixation_stim.js';
 
 class DualScheduler extends Scheduler{
 
-    constructor(psychojs,mode="vis",correct_key='j',dual_difficulty=7,practice=false){
+    constructor({psychojs,mode="vis",correct_key='j',dual_difficulty=7,practice=false,staircase_sched}){
         super(psychojs);
         this.psychojs = psychojs;
 
         this.practice = practice;
+        this.mode = mode;
 
         if (mode == "phon")
         {
@@ -36,7 +37,7 @@ class DualScheduler extends Scheduler{
         }
 
 
-        this.dual_difficulty = dual_difficulty;
+        this.dual_difficulty = staircase_sched.getDifficulty();
 
 
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock

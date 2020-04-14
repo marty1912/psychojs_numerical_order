@@ -15,9 +15,11 @@ import {FixationStim} from './fixation_stim.js';
 
 // class to handle the schedule of our staircase procedure. used in the "main"
 class StaircaseScheduler extends Scheduler{
-    constructor(psychojs,mode="vis",correct_key='j'){
+    constructor({psychojs,mode="vis",correct_key='j',practice=false,debug=false}){
         super(psychojs);
         this.psychojs = psychojs;
+        this.mode = mode;
+        this.debug = debug;
         if (mode == "phon")
         {
             this.stim_class = Phon_stim;
@@ -45,6 +47,10 @@ class StaircaseScheduler extends Scheduler{
     // the difficulty will be the mean of all the reversals of the staircase.
     // Use this function after the staircase procedure has finished!!
     getDifficulty(){
+        if(this.debug){
+            return 10
+        }
+
         let reversals = this.staircase.getReversals();
         let sum = 0;
         for(let i= 0;i<reversals.length;i++){

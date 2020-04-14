@@ -10,7 +10,7 @@ class FixationStim extends Polygon{
     // numbers is an array of number to be displayed as text ([1,2,3] for example)
     constructor({
         name='fixation',
-        win,size=0.1 }={}) 
+        win,size=0.05 }={}) 
     {
 
         super({
