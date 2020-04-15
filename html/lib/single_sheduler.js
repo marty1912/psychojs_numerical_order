@@ -14,29 +14,25 @@ import * as constants from './constants.js';
 class SingleScheduler extends Scheduler{
     constructor({psychojs,prob_code,rig=false,correct_key='j',practice=false,debug=false}){
         super(psychojs);
+
         this.psychojs = psychojs;
         this.debug = debug;
         this.prob_code = prob_code;
-
-
         this.practice = practice;
         this.rig = rig;
-
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
-
-        this.valid_keys = ['j', 'k'];
+        this.valid_keys = constants.KEYS_ACCEPT_DECLINE;
         this.correct_key = correct_key;
 
         this.all_stims = Ord_stim.getStimsForTrial(this.psychojs.window);
 
         this.setupSchedule();
+
         console.log("starting single schedule");
-
         console.log("all_stims :",this.all_stims);
+
         this.data = []
-
         this.loop_nr = 0;
-
     }
 
 
@@ -46,32 +42,32 @@ class SingleScheduler extends Scheduler{
         if (this.debug){
             this.add(this.initRig);
 
-        let n_loops = 1;
-        for(let i= 0 ; i<n_loops ; i++)
-        {
-            this.add(this.loopHead);
-            this.add(this.loopBodyEachFrame);
-            this.add(this.loopEnd);
-        }
-        this.add(this.saveData);
+            let n_loops = 1;
+            for(let i= 0 ; i<n_loops ; i++)
+            {
+                this.add(this.loopHead);
+                this.add(this.loopBodyEachFrame);
+                this.add(this.loopEnd);
+            }
+            this.add(this.saveData);
 
         }
         else{
 
-        let instruction_text = SchedulerUtils.getInstructionsText(this);
+            let instruction_text = SchedulerUtils.getInstructionsText(this);
 
-        this.add(new InstuctionsScheduler({psychojs:this.psychojs,text:instruction_text}));
+            this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,text:instruction_text}));
 
-        this.add(this.initRig);
+            this.add(this.initRig);
 
-        let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
-        for(let i= 0 ; i<n_loops ; i++)
-        {
-            this.add(this.loopHead);
-            this.add(this.loopBodyEachFrame);
-            this.add(this.loopEnd);
-        }
-        this.add(this.saveData);
+            let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
+            for(let i= 0 ; i<n_loops ; i++)
+            {
+                this.add(this.loopHead);
+                this.add(this.loopBodyEachFrame);
+                this.add(this.loopEnd);
+            }
+            this.add(this.saveData);
         }
     }
 
@@ -126,7 +122,6 @@ class SingleScheduler extends Scheduler{
         this.setupTimes();
 
         this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
-
 
         this.clock.reset();
 
@@ -191,6 +186,7 @@ class SingleScheduler extends Scheduler{
         loopdata.descending = this.stim.isDescending();
         loopdata.ordered = this.stim.isOrdered();
         loopdata.distance = this.stim.getDistance();
+        loopdata.datetime = new Date().toLocaleString();
 
         loopdata.rig = this.rig;
 
@@ -212,8 +208,6 @@ class SingleScheduler extends Scheduler{
                 if ((pressed_key.name == this.correct_key && this.stim.isOrdered() == true) 
                     || (pressed_key.name != this.correct_key && this.stim.isOrdered() == false)){
                     // correct response
-                    this.psychojs.experiment.addData("correct","true");
-                    this.psychojs.experiment.addData("rt",pressed_key.rt);
 
                     loopdata.correct = true;
                     loopdata.rt = pressed_key.rt;
@@ -222,8 +216,6 @@ class SingleScheduler extends Scheduler{
                 }
                 else{
                     // incorrect response
-                    this.psychojs.experiment.addData("correct","false");
-                    this.psychojs.experiment.addData("rt",pressed_key.rt);
 
                     loopdata.correct = false;
                     loopdata.rt = pressed_key.rt;
@@ -246,19 +238,23 @@ class SingleScheduler extends Scheduler{
     }
 
     saveData(){
-        // TODO check how we will do this!!.
-        // this.psychojs.experiment.save();
-        console.log("experiment: ",this.psychojs.experiment);
-        // TODO upload to Server. we will probably have to do this ourselves..
-        console.log("data:",this.data);
 
-        let trial = "single";
 
-        SchedulerUtils.upload(this.data,trial,this.prob_code);
+        if(this.rig == true){
 
-        // we can do this at the very end to get all the rig data
-        let rig_keys = this.rig_keyboard.getKeys({keyList: this.rig_keys, waitRelease: false});
-        console.log("rig data:",rig_keys);
+            let trial = "dual_rig";
+            SchedulerUtils.upload(this.data,trial,this.prob_code);
+            let rig_keys = this.rig_keyboard.getKeys({keyList: this.rig_keys, waitRelease: false});
+            trial = "rig";
+            SchedulerUtils.upload(this.rig_keys,trial,this.prob_code);
+            console.log("rig data:",rig_keys);
+        }
+        else
+        {
+            let trial = "single";
+            SchedulerUtils.upload(this.data,trial,this.prob_code);
+        }
+        return Scheduler.Event.NEXT;
     }
 
 

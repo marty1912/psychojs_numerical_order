@@ -73,10 +73,10 @@ function main() {
     // staircases first
     // we use an object so we can give it to the dual task later. it needs it to get the correct difficulty.
     let staircases = {
-        pract_phon: new StaircaseScheduler({psychojs:psychoJS,mode:'phon',correct_key:order.correct_key,practice:true}),
-        phon: new StaircaseScheduler({psychojs:psychoJS,mode:'phon',correct_key:order.correct_key,practice:false}),
-        pract_vis: new StaircaseScheduler({psychojs:psychoJS,mode:'vis',correct_key:order.correct_key,practice:true}),
-        vis: new StaircaseScheduler({psychojs:psychoJS,mode:'vis',correct_key:order.correct_key,practice:false}),
+        pract_phon: new StaircaseScheduler({psychojs:psychoJS, prob_code:prob_code , mode:'phon',correct_key:order.correct_key,practice:true}),
+        phon: new StaircaseScheduler({psychojs:psychoJS, prob_code:prob_code ,mode:'phon',correct_key:order.correct_key,practice:false}),
+        pract_vis: new StaircaseScheduler({psychojs:psychoJS, prob_code:prob_code ,mode:'vis',correct_key:order.correct_key,practice:true}),
+        vis: new StaircaseScheduler({psychojs:psychoJS, prob_code:prob_code ,mode:'vis',correct_key:order.correct_key,practice:false}),
     };
 
     for (let i=0;i<order.staircase_modes.length;i++){

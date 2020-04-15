@@ -71,6 +71,11 @@ class  Grid {
 
 class Vs_stim extends Grid {
 
+    // ctor Vs_stim
+    // @param name - name to be used for logging
+    // @param win - window for stim to be rendered in.
+    // @param size - the size of the stim.
+    // @param lines - the number of lines in the grid. (as in fields not really the lines)
     constructor(name, win, size,lines=5)
     {
         super(name,win,size,lines);
@@ -93,7 +98,22 @@ class Vs_stim extends Grid {
 
     }
 
-    // function so we can use this like we would use any other stimulus
+    // toString() 
+    // override to string method so we can use it to get the text in our data files.
+    // @return the taken positions of the stimulus.
+    toString(){
+        let string = "";
+        let taken_pos = this.getTakenPositions();
+
+        for (let i=0;i<taken_pos.length;i++){
+            string += "{"+taken_pos[i].x +","+ taken_pos[i].y+"}," ;
+        }
+        return string;
+    }
+
+
+    // setAutoDraw(autoDraw,log=false)
+    // override function so we can use this like we would use any other stimulus
     setAutoDraw(autoDraw, log = false)
     {
 
@@ -113,12 +133,17 @@ class Vs_stim extends Grid {
     }
 
 
+    // getDifficulty()
+    // returns the difficulty (number of dots) for the stimulus.
     getDifficulty(){
         return this.getTakenPositions().length;
     }
+    // addDot(x,y)
     // adds a dot to the given field in the grid 
     // x=0 is left y=0 is at the bottom
     // x and y are indices not coordinates!
+    // @param x - the x location in the grid for the dot. (0 is left)
+    // @param y - the y location in the grid for the dot. (0 is bottom)
     addDot(x,y){
 
         if (x >= this.lines || y >= this.lines){
@@ -156,6 +181,7 @@ class Vs_stim extends Grid {
         }));
     }
 
+    // addRandomDot()
     // adds one random dot to the grid
     addRandomDot(){
 
@@ -165,15 +191,20 @@ class Vs_stim extends Grid {
 
     }
 
+    // addRandomDots(n_dots)
     // adds n_dots random dot to the grid
+    // @param n_dots - number of dots to add.
     addRandomDots(n_dots){
         for(let i= 0; i<n_dots;i++){
             this.addRandomDot();
         }
     }
 
-    // returns all possible positions to place a dot. 
+    // getAllPossiblePositions()
+    //
+    // @return: all possible positions to place a dot. 
     // the middle is not included because we have the black dot there already.
+    // it is an array of position objects. {x,y}
     getAllPossiblePositions(){
         let poss_pos = [];
         let middle = Math.floor(this.lines / 2);
@@ -196,6 +227,9 @@ class Vs_stim extends Grid {
 
     }
 
+    // getTakenPositions()
+    // gets all positions where a dot is currently placed.
+    // @return: array of position objects. {x,y}
     getTakenPositions(){
 
         //console.log("(getTakenPositions) called");
@@ -231,6 +265,10 @@ class Vs_stim extends Grid {
         return taken_pos;
     }
 
+    // moveRandomDot()
+    //
+    // moves one randomly selected dot to another randomly selected position.
+    //
     moveRandomDot(){
         //console.log("(moveRandomDot) called:");
         let taken_pos = this.getTakenPositions();
@@ -250,8 +288,12 @@ class Vs_stim extends Grid {
         }
     }
 
+    // getPairForTrial(n_dots,win,correct,size=1)
     // returns a pair of Vs_stimuli objects to use in our study.
-    //
+    // @param n_dots: number of dots for the stimuli
+    // @param win: window for the stimuli to be rendered.
+    // @param correct: select if the stimulus pair should be correct(same) or not (different).
+    // @param size: the size to render the stimuli
     static getPairForTrial(n_dots,win,correct,size=1){
         let stim_first = new Vs_stim('learn',win,size);
         stim_first.addRandomDots(n_dots);
@@ -268,7 +310,7 @@ class Vs_stim extends Grid {
 
 
 
-        return {learn: stim_first,test:stim_second};
+        return {learn: stim_first,test:stim_second,toString:function(){return stim_first.toString()+"_"+stim_second.toString();}};
 
     }
 

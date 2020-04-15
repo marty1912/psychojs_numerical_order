@@ -16,12 +16,13 @@ import * as constants from './constants.js';
 
 // class to handle the schedule of our staircase procedure. used in the "main"
 class StaircaseScheduler extends Scheduler{
-    constructor({psychojs,mode="vis",correct_key='j',practice=false,debug=false}){
+    constructor({psychojs,mode="vis",prob_code,correct_key='j',practice=false,debug=false}){
         super(psychojs);
         this.psychojs = psychojs;
         this.mode = mode;
         this.debug = debug;
         this.practice= practice;
+        this.prob_code = prob_code;
         if (mode == "phon")
         {
             this.stim_class = Phon_stim;
@@ -44,6 +45,7 @@ class StaircaseScheduler extends Scheduler{
 
         this.setupSchedule();
 
+        this.data = []
     }
 
     // the difficulty will be the mean of all the reversals of the staircase.
@@ -63,12 +65,14 @@ class StaircaseScheduler extends Scheduler{
         return mean;
     }
 
+    // setupSchedule
     // sets up the schedule of the staircase procedure
+    // adds all functions to the scheduler
     setupSchedule(){
         // setup the schedule
         
         let instruction_text = SchedulerUtils.getInstructionsText(this);
-        this.add(new InstuctionsScheduler({psychojs:this.psychojs,text:instruction_text}));
+        this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,text:instruction_text}));
 
         let n_trials = (this.practice)? constants.PRACTICE_LEN : 25;
         for(let i= 0;i<n_trials;i++)
@@ -172,10 +176,15 @@ class StaircaseScheduler extends Scheduler{
         this.stimpair.learn.setAutoDraw(false);
         this.stimpair.test.setAutoDraw(false);
 
-        let trial_was_correct = false;
         // get data:
-        // TODO!!
-        this.psychojs.experiment.addData("len",this.stimpair.learn.getDifficulty());
+        let loopdata = {};
+        loopdata.prob_code = this.prob_code;
+        loopdata.difficulty = this.stimpair.learn.getDifficulty();
+        loopdata.stimpair = this.stimpair.toString();
+
+        loopdata.datetime = new Date().toLocaleString();
+
+        let trial_was_correct = false;
 
         console.log("data: ",this.all_pressed_keys);
         // check if it was correct or not.
@@ -189,16 +198,16 @@ class StaircaseScheduler extends Scheduler{
                 if ((pressed_key.name == this.correct_key && this.trial_correct == true) 
                     || (pressed_key.name != this.correct_key && this.trial_correct == false)){
                     // correct response
-                    this.psychojs.experiment.addData("correct","true");
-                    this.psychojs.experiment.addData("rt",pressed_key.rt);
+                    loopdata.correct = true;
+                    loopdata.rt = pressed_key.rt;
                     trial_was_correct = true;
                     break;
 
                 }
                 else{
                     // incorrect response
-                    this.psychojs.experiment.addData("correct","false");
-                    this.psychojs.experiment.addData("rt",pressed_key.rt);
+                    loopdata.correct = false;
+                    loopdata.rt = pressed_key.rt;
                     break;
 
                 }
@@ -208,7 +217,7 @@ class StaircaseScheduler extends Scheduler{
         }
 
 
-        this.psychojs.experiment.nextEntry();
+        this.data.push(loopdata);
 
         this.current_difficulty = this.staircase.getNewVal(trial_was_correct);
 
@@ -217,9 +226,12 @@ class StaircaseScheduler extends Scheduler{
     }
 
     saveData(){
-        // TODO check how we will do this!!.
-        // this.psychojs.experiment.save();
-        console.log("experiment: ",this.psychojs.experiment);
+
+        let trial = "stair_"+this.mode;
+
+        SchedulerUtils.upload(this.data,trial,this.prob_code);
+
+        return Scheduler.Event.NEXT;
     }
 
 

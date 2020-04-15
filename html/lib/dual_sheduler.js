@@ -15,10 +15,11 @@ import * as constants from './constants.js';
 
 class DualScheduler extends Scheduler{
 
-    constructor({psychojs,mode="vis",correct_key='j',dual_difficulty=7,practice=false,staircase_sched}){
+    constructor({psychojs,mode="vis",prob_code,correct_key='j',dual_difficulty=7,practice=false,staircase_sched}){
         super(psychojs);
         this.psychojs = psychojs;
 
+        this.prob_code = prob_code;
         this.practice = practice;
         this.mode = mode;
 
@@ -39,10 +40,9 @@ class DualScheduler extends Scheduler{
 
         this.dual_difficulty = staircase_sched.getDifficulty();
 
-
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
 
-        this.valid_keys = ['j', 'k'];
+        this.valid_keys = constants.KEYS_ACCEPT_DECLINE;
         this.correct_key = correct_key;
 
         this.all_stims = Ord_stim.getStimsForTrial(this.psychojs.window);
@@ -63,7 +63,7 @@ class DualScheduler extends Scheduler{
     setupSchedule(){
         // setup the schedule
         let instruction_text = SchedulerUtils.getInstructionsText(this);
-        this.add(new InstuctionsScheduler({psychojs:this.psychojs,text:instruction_text}));
+        this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,text:instruction_text}));
 
         let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
         for(let i= 0 ; i<n_loops ; i++)
@@ -207,6 +207,8 @@ class DualScheduler extends Scheduler{
         loopdata.ordered = this.stim.isOrdered();
         loopdata.distance = this.stim.getDistance();
 
+        loopdata.datetime = new Date().toLocaleString();
+
 
         let response_ord = this.checkCorrectKey(this.all_pressed_keys);
         if(response_ord != undefined){
@@ -232,12 +234,11 @@ class DualScheduler extends Scheduler{
     }
 
     saveData(){
-        // TODO check how we will do this!!.
-        // this.psychojs.experiment.save();
-        console.log("experiment: ",this.psychojs.experiment);
-        // TODO upload to Server. we will probably have to do this ourselves..
-        console.log("data:",this.data);
 
+        let trial = "dual_"+this.mode;
+        SchedulerUtils.upload(this.data,trial,this.prob_code);
+
+        return Scheduler.Event.NEXT;
     }
 
     checkCorrectKey(all_pressed_keys){
