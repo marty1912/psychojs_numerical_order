@@ -17,7 +17,7 @@ class InstuctionsScheduler extends Scheduler{
 
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
 
-        this.valid_keys = ['j', 'k'];
+        this.valid_keys = [correct_key];
         // incase we want to use it for our instructions somehow..
         this.correct_key = correct_key;
 
@@ -46,7 +46,7 @@ class InstuctionsScheduler extends Scheduler{
             text: this.text,
             font: 'Arial',
             units: undefined, 
-            pos: [0, 0], height: 0.1,  wrapWidth: undefined, ori: 0,
+            pos: [0, 0], height: 0.03,  wrapWidth: true, ori: 0,
             color: new util.Color('black'),  opacity: 1,
             depth: 0.0 
         });
