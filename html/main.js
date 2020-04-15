@@ -12,7 +12,6 @@ import {SingleScheduler} from './lib/single_sheduler.js';
 import {DualScheduler} from './lib/dual_sheduler.js';
 import {SchedulerUtils} from './lib/scheduler_utils.js';
 
-// main psychoJS:
 const psychoJS = new PsychoJS({
     debug: true
 });
@@ -25,9 +24,8 @@ psychoJS.openWindow({
     waitBlanking: true
 });
 
-// store info about the experiment session:
-let expName = 'Ordinalitäten';  // from the Builder filename that created this script
-var expInfo = {'prob_code': ''};
+let expName = 'Untersuchung zu Ordinalitäten';  
+var expInfo = {'Probanden Code': ''};
 
 // schedule the experiment:
 psychoJS.schedule(psychoJS.gui.DlgFromDict({
@@ -36,7 +34,6 @@ psychoJS.schedule(psychoJS.gui.DlgFromDict({
 }));
 
 const mainScheduler = new Scheduler(psychoJS);
-
 
 psychoJS.schedule(mainScheduler);
 mainScheduler.add(main); 
@@ -50,21 +47,13 @@ psychoJS.start({
 function main() {
     expInfo['date'] = util.MonotonicClock.getDateStr();  // add a simple timestamp
     expInfo['expName'] = expName;
-    expInfo['psychopyVersion'] = '2020.1.2';
-    expInfo['OS'] = window.navigator.platform;
 
-    let frameDur ;
-    // store frame rate of monitor if we can measure it successfully
-    expInfo['frameRate'] = psychoJS.window.getActualFrameRate();
-    if (typeof expInfo['frameRate'] !== 'undefined')
-        frameDur = 1.0 / Math.round(expInfo['frameRate']);
-    else
-        frameDur = 1.0 / 60.0; // couldn't get a reliable measure so guess
-
-    // add info from the URL:
+        // add info from the URL:
     util.addInfoFromUrl(expInfo);
 
-    let prob_code = expInfo['prob_code'];
+    let prob_code = expInfo['Probanden Code'];
+    getPCSpecs(prob_code);
+
 
     // setup the experiment schedule 
     let prob_count = SchedulerUtils.getCountFromServer();
@@ -151,6 +140,33 @@ function main() {
 
 
     return Scheduler.Event.NEXT;
+}
+
+// getPCSpecs(prob_code)
+// gets the specs of the users pc and uploads them to the server.
+//
+// @param prob_code: the participants code.
+function getPCSpecs(prob_code){
+
+    console.log("test");
+    let user_info = {};
+    user_info.psychopyVersion = '2020.1.2';
+    user_info.os = window.navigator.platform;
+    user_info.frame_rate = psychoJS.window.getActualFrameRate();
+
+    user_info.screen_height = window.screen.height;
+    user_info.screen_width = window.screen.width;
+    user_info.screen_availHeight = window.screen.availHeight;
+    user_info.screen_availWidth = window.screen.availWidth;
+    user_info.screen_pixel_ratio = window.devicePixelRatio;
+    user_info.screen_height_t_ratio = window.screen.height * window.devicePixelRatio;
+    user_info.screen_width_t_ratio = window.screen.width * window.devicePixelRatio;
+
+    console.log("user_info: ",user_info);
+    
+
+
+    SchedulerUtils.upload([user_info],"user_info_",prob_code);
 }
 
 // getScheduleOrder(prob_count)
@@ -265,15 +281,3 @@ function clone(obj) {
     throw new Error("Unable to copy obj! Its type isn't supported.");
 }
 
-/*
-function quitPsychoJS(message, isCompleted) {
-    // Check for and save orphaned data
-    if (psychoJS.experiment.isEntryEmpty()) {
-        psychoJS.experiment.nextEntry();
-    }
-    psychoJS.window.close();
-    psychoJS.quit({message: message, isCompleted: isCompleted});
-
-    return Scheduler.Event.QUIT;
-}
-*/

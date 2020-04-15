@@ -11,10 +11,14 @@ import {StaircaseScheduler} from './staircase_sheduler.js';
 import {DualScheduler} from './dual_sheduler.js';
 import {SingleScheduler} from './single_sheduler.js';
 import * as constants from './constants.js';
+import { Scheduler } from './util-2020.1.js';
+
 
 class SchedulerUtils {
 
 
+    // checkToActivateStim
+    // used in frame loops to check if a stimulus should be activated
     static checkToAcitvateStim(current_t,start_time,stim,frameIndex){
         if (current_t >= start_time && stim.status === PsychoJS.Status.NOT_STARTED) {
             //console.log("stim: ",stim.name,", activated: t: ",current_t);
@@ -26,6 +30,9 @@ class SchedulerUtils {
         }
 
     }
+
+    // checkToDeactivateStim
+    // used in frame loops to check if a stimulus should be deactivated
     static checkToDeacitvateStim(current_t,end_time,stim,frameIndex,psychoJS){
         let time_adjusted_with_frame = end_time - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
         if (stim.status === PsychoJS.Status.STARTED && current_t >= time_adjusted_with_frame) {
@@ -37,10 +44,15 @@ class SchedulerUtils {
 
     }
 
+    // activateAndDeactivateStim
+    // used in frame loops to check if a stimulus should be deactivated / activated
     static activateAndDeactivateStim(current_t,start_time,end_time,stim,frame_index,psychoJS){
         SchedulerUtils.checkToAcitvateStim(current_t,start_time,stim,frame_index);
         SchedulerUtils.checkToDeacitvateStim(current_t,end_time,stim,frame_index,psychoJS);
     }
+
+    // activateAndDeactivateKeyboard
+    // used in frame loops to check if a stimulus should be deactivated / activated
     static activateAndDeactivateKeyboard(current_t,start_time,end_time,keyboard,frame_index,psychoJS){
         // KEYBOARD handling
         if (current_t >= start_time && keyboard.status === PsychoJS.Status.NOT_STARTED) {
@@ -64,6 +76,9 @@ class SchedulerUtils {
     }
 
 
+    // getStartEndTimes
+    // used as an helperfunction to get start and endtime object from a starttime + duration.
+    // @return object with {start,end}
     static getStartEndTimes(start_time,duration){
         let times = {start:start_time,end:start_time+duration}
         //console.log("getting times: ", times);
@@ -71,16 +86,18 @@ class SchedulerUtils {
     }
 
 
-    // checks for escape pressed and closes the window automatically if so.
+    // checks if the user pressed escape and ends the expreriment if so.
     static quitOnEscape(psychoJS){
         if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
             psychoJS.window.close();
-            //psychoJS.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: true});
-            return true; 
+            //psychoJS.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: false});
+            return Scheduler.Event.Quit; 
         }
         return false;
     }
 
+    // getCurrentDateString()
+    // gets the current Date as a string. used for filenames.
     static getCurrentDateString(){
         let cur_date_user = new Date();
         let date_string = cur_date_user.getFullYear()+"_"
@@ -117,6 +134,11 @@ class SchedulerUtils {
         return count;
     }
 
+    // uploads data to our server via http post
+    // @param data: object to be used as data.
+    // transforms the data object into an csv.
+    // @param trial: used in filename.
+    // @param prob_code: the participants code. (also used for filename)
     static upload(data,trial,prob_code){
 
         // get data
@@ -149,6 +171,9 @@ class SchedulerUtils {
 
     }
 
+    //getInstructionsText(sched)
+    //@param sched: the scheduler for whom we need to get the instructions
+    //@return the correct instructions to use.
     static getInstructionsText(sched){
         if(sched instanceof StaircaseScheduler)
         {
@@ -243,7 +268,6 @@ class SchedulerUtils {
                     }
 
                 }
-
 
             }else{
                 if(sched.rig == true){
