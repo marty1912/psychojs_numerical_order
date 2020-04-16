@@ -16,7 +16,7 @@ class Phon_stim extends TextStim{
     }={}) 
     {
         let rand_string = Phon_stim.getRandomString(len);
-        super({name:name,win:win,pos:[0,0],opacity:1,text:rand_string});
+        super({name:name,win:win,pos:[0,0],opacity:1,text:rand_string,color: new Color('black')});
         this.text = rand_string;
     }
 

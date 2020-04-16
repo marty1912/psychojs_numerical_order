@@ -43,7 +43,8 @@ class InstuctionsScheduler extends Scheduler{
             win: this.psychojs.window,
             name: 'instructions',
             image: this.image,
-            pos: [0, 0], height: 0.03,  wrapWidth: true, ori: 0,
+            pos: [0, 0], ori: 0,
+            size:1,
             opacity: 1,
             depth: 0.0 
         });

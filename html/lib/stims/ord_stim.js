@@ -17,7 +17,7 @@ class Ord_stim extends TextStim{
 
         let text = Ord_stim.getTextFromNumbers(numbers);
 
-        super({name:name,win:win,pos:[0,0],opacity:1,text:text});
+        super({name:name,win:win,pos:[0,0],opacity:1,text:text,color: new Color('black')});
 
         this.numbers =numbers;
     }

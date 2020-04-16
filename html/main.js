@@ -21,7 +21,7 @@ const psychoJS = new PsychoJS({
 // open window:
 psychoJS.openWindow({
     fullscr: true,
-    color: new util.Color([0, 0, 0]),
+    color: new util.Color('white'),
     units: 'height',
     waitBlanking: true
 });
@@ -33,7 +33,7 @@ var expInfo = {'Probandencode':'' };
 psychoJS.schedule(psychoJS.gui.DlgFromDict({
     dictionary: expInfo,
     title: "Bitte Tragen Sie hier Ihren Probandencode ein.",
-    logoUrl:'images/test.png',
+    logoUrl:'images/prob_code.png',
 }));
 
 const mainScheduler = new Scheduler(psychoJS);
@@ -98,12 +98,13 @@ function main() {
                 prob_code:prob_code ,
                 correct_key:order.correct_key,
                 rig:true,
-                practice:false}));
+                practice:true}));
+
             mainScheduler.add(new SingleScheduler({psychojs: psychoJS,
                 prob_code:prob_code ,
                 correct_key:order.correct_key,
                 rig:true,
-                practice:true}));
+                practice:false}));
 
         }
         else if(order.dual_modes[i] == 'phon'){

@@ -29,9 +29,6 @@ class SingleScheduler extends Scheduler{
 
         this.setupSchedule();
 
-        console.log("starting single schedule");
-        console.log("all_stims :",this.all_stims);
-
         this.data = []
         this.loop_nr = 0;
     }
@@ -51,17 +48,15 @@ class SingleScheduler extends Scheduler{
                 this.add(this.loopEnd);
             }
             this.add(this.saveData);
-
         }
         else{
-
 
             let instr_img = SchedulerUtils.getInstructionsImage(this);
             if(this.rig){
                 this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,image:instr_img,pause_after:0}));
                 instr_img = new Image();
                 instr_img.src = constants.INSTRUCTION_RIG_2;
-                this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:'s',image:instr_img}));
+                this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:constants.KEY_RIG,image:instr_img}));
 
             }else{
                 this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,image:instr_img}));
