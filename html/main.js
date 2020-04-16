@@ -25,7 +25,6 @@ psychoJS.openWindow({
     units: 'height',
     waitBlanking: true
 });
-
 let expName = 'Untersuchung zu Ordinalitäten';  
 var expInfo = {'Probandencode':'' };
 

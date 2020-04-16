@@ -22,6 +22,7 @@ class DualScheduler extends Scheduler{
         this.prob_code = prob_code;
         this.practice = practice;
         this.mode = mode;
+        this.staircase_sched = staircase_sched;
 
         if (mode == "phon")
         {
@@ -98,7 +99,7 @@ class DualScheduler extends Scheduler{
 
     loopHead(){
 
-        this.dual_difficulty = staircase_sched.getDifficulty();
+        this.dual_difficulty = this.staircase_sched.getDifficulty();
 
         this.stim = this.all_stims[this.loop_nr];
 
