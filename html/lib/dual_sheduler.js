@@ -197,11 +197,16 @@ class DualScheduler extends Scheduler{
         // and now the loop has ended
 
         let loopdata = {};
+        loopdata.prob_code = this.prob_code;
         loopdata.numbers = this.stim.getNumbers();
         loopdata.ascending = this.stim.isAscending();
         loopdata.descending = this.stim.isDescending();
         loopdata.ordered = this.stim.isOrdered();
         loopdata.distance = this.stim.getDistance();
+
+        loopdata.n_frames = this.frameN;
+        loopdata.loop_duration = this.clock.getTime();
+        loopdata.framerate = loopdata.n_frames/loopdata.loop_duration;
 
         loopdata.dual_stim = this.dual_stims.toString();
         loopdata.datetime = new Date().toLocaleString();

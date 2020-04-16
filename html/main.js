@@ -153,25 +153,24 @@ function main() {
 // @param prob_code: the participants code.
 function getPCSpecs(prob_code){
 
-    console.log("test");
-    let user_info = {};
-    user_info.psychopyVersion = '2020.1.2';
-    user_info.os = window.navigator.platform;
-    user_info.frame_rate = psychoJS.window.getActualFrameRate();
+    let client_info = {};
+    client_info.psychopyVersion = '2020.1.2';
+    client_info.os = window.navigator.platform;
+    client_info.frame_rate = psychoJS.window.getActualFrameRate();
+    client_info.n_cpus = navigator.hardwareConcurrency; 
 
-    user_info.screen_height = window.screen.height;
-    user_info.screen_width = window.screen.width;
-    user_info.screen_availHeight = window.screen.availHeight;
-    user_info.screen_availWidth = window.screen.availWidth;
-    user_info.screen_pixel_ratio = window.devicePixelRatio;
-    user_info.screen_height_t_ratio = window.screen.height * window.devicePixelRatio;
-    user_info.screen_width_t_ratio = window.screen.width * window.devicePixelRatio;
+    client_info.screen_height = window.screen.height;
+    client_info.screen_width = window.screen.width;
+    client_info.screen_availHeight = window.screen.availHeight;
+    client_info.screen_availWidth = window.screen.availWidth;
+    client_info.screen_pixel_ratio = window.devicePixelRatio;
+    client_info.screen_height_t_ratio = window.screen.height * window.devicePixelRatio;
+    client_info.screen_width_t_ratio = window.screen.width * window.devicePixelRatio;
 
-    console.log("user_info: ",user_info);
     
 
 
-    ServerUtils.upload([user_info],"user_info_",prob_code);
+    ServerUtils.upload([client_info],"client_info_",prob_code);
 }
 
 

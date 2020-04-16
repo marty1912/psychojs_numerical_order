@@ -122,6 +122,8 @@ class StaircaseScheduler extends Scheduler{
 
         this.all_pressed_keys = [];
 
+        this.frameN = 0;
+
         return Scheduler.Event.NEXT;
     }
 
@@ -134,7 +136,7 @@ class StaircaseScheduler extends Scheduler{
         let continueRoutine = true; // until we're told otherwise
         // get current time
         let t = this.clock.getTime();
-        this.frameN = this.frameN + 1;// number of completed frames (so 0 is the first frame)
+        this.frameN++;// number of completed frames (so 0 is the first frame)
         // update/draw components on each frame
 
 
@@ -182,6 +184,10 @@ class StaircaseScheduler extends Scheduler{
         loopdata.prob_code = this.prob_code;
         loopdata.difficulty = this.stimpair.learn.getDifficulty();
         loopdata.stimpair = this.stimpair.toString();
+
+        loopdata.n_frames = this.frameN;
+        loopdata.loop_duration = this.clock.getTime();
+        loopdata.framerate = loopdata.n_frames/loopdata.loop_duration;
 
         loopdata.datetime = new Date().toLocaleString();
 
