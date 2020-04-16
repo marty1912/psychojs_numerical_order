@@ -3,7 +3,7 @@
 // we use a file to keep track of our visitors.
 $filename = "user_count.txt";
 
-$target_dir = "../data/";
+$target_dir = "../";
 $path = $target_dir . $filename;
 
 $fp = fopen($path, "r+") or die("Unable to open count file: $path");
