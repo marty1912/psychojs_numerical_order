@@ -142,7 +142,7 @@ function main() {
 
 
     // after the experiment we redirect to the limesurvey for Versuchsscheine.
-    mainScheduler.add(function() {window.location.href = "http://new_url.com";}); 
+    mainScheduler.add(function() {window.location.href = "https://survey2.edu.uni-graz.at/919136/lang-de";}); 
 
     return Scheduler.Event.NEXT;
 }
