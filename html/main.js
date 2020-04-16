@@ -68,6 +68,9 @@ function main() {
         vis: new StaircaseScheduler({psychojs:psychoJS, prob_code:prob_code ,mode:'vis',correct_key:order.correct_key,practice:false}),
     };
 
+
+    console.log("getDiff:",staircases.vis.getDifficulty());
+
     for (let i=0;i<order.staircase_modes.length;i++){
         if(order.staircase_modes[i] == 'phon'){
             mainScheduler.add(staircases.pract_phon);

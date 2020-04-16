@@ -62,9 +62,10 @@ class StaircaseScheduler extends Scheduler{
 
         let sum = 0;
         for(let i= 0;i<reversals.length;i++){
-            sum+=reversals.val;
+            sum+=reversals[i].val;
         }
         let mean = sum/reversals.length;
+
 
         mean = Math.floor(mean);
 
