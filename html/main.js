@@ -10,7 +10,8 @@ import {Phon_stim} from './lib/stims/phon_stim.js';
 import {StaircaseScheduler} from './lib/staircase_sheduler.js';
 import {SingleScheduler} from './lib/single_sheduler.js';
 import {DualScheduler} from './lib/dual_sheduler.js';
-import {SchedulerUtils} from './lib/util/scheduler_utils.js';
+import * as constants from './lib/util/constants.js';
+import * as ServerUtils from './lib/util/server_utils.js';
 
 const psychoJS = new PsychoJS({
     debug: true
@@ -56,7 +57,7 @@ function main() {
 
 
     // setup the experiment schedule 
-    let prob_count = SchedulerUtils.getCountFromServer();
+    let prob_count = ServerUtils.getCountFromServer();
     let order = getScheduleOrder(prob_count);
 
     // staircases first
@@ -166,7 +167,7 @@ function getPCSpecs(prob_code){
     
 
 
-    SchedulerUtils.upload([user_info],"user_info_",prob_code);
+    ServerUtils.upload([user_info],"user_info_",prob_code);
 }
 
 
@@ -180,7 +181,7 @@ function getPCSpecs(prob_code){
 function getScheduleOrder(prob_count){
     // get the list of all possibilities:
     let base_order = {
-        correct_key:SchedulerUtils.KEYS_ACCEPT_DECLINE,
+        correct_key:constants.KEYS_ACCEPT_DECLINE,
         staircase_modes:["phon","vis"],
         dual_modes:["phon","vis","rig"],
     };

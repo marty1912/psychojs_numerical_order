@@ -8,9 +8,10 @@ import {Ord_stim} from './stims/ord_stim.js';
 import {Phon_stim} from './stims/phon_stim.js';
 import {Vs_stim} from './stims/grid_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
-import {SchedulerUtils} from './util/scheduler_utils.js';
+import * as SchedulerUtils from './util/scheduler_utils.js';
 import {FixationStim} from './stims/fixation_stim.js';
 import * as constants from './util/constants.js';
+import * as ServerUtils from './util/server_utils.js';
 
 class DualScheduler extends Scheduler{
 
@@ -235,7 +236,7 @@ class DualScheduler extends Scheduler{
     saveData(){
 
         let trial = "dual_"+this.mode;
-        SchedulerUtils.upload(this.data,trial,this.prob_code);
+        ServerUtils.upload(this.data,trial,this.prob_code);
 
         return Scheduler.Event.NEXT;
     }

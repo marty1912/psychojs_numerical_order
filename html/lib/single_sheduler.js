@@ -8,8 +8,9 @@ import * as sound from './psychojs/sound-2020.1.js';
 import {Ord_stim} from './stims/ord_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
 import {FixationStim} from './stims/fixation_stim.js';
-import {SchedulerUtils} from './util/scheduler_utils.js';
+import * as SchedulerUtils from './util/scheduler_utils.js';
 import * as constants from './util/constants.js';
+import * as ServerUtils from './util/server_utils.js';
 
 class SingleScheduler extends Scheduler{
     constructor({psychojs,prob_code,rig=false,correct_key='j',practice=false,debug=false}){
@@ -243,16 +244,16 @@ class SingleScheduler extends Scheduler{
         if(this.rig == true){
 
             let trial = "dual_rig";
-            SchedulerUtils.upload(this.data,trial,this.prob_code);
+            ServerUtils.upload(this.data,trial,this.prob_code);
             let rig_keys = this.rig_keyboard.getKeys({keyList: this.rig_keys, waitRelease: false});
             trial = "rig";
-            SchedulerUtils.upload(this.rig_keys,trial,this.prob_code);
+            ServerUtils.upload(this.rig_keys,trial,this.prob_code);
             console.log("rig data:",rig_keys);
         }
         else
         {
             let trial = "single";
-            SchedulerUtils.upload(this.data,trial,this.prob_code);
+            ServerUtils.upload(this.data,trial,this.prob_code);
         }
         return Scheduler.Event.NEXT;
     }

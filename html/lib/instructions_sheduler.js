@@ -4,7 +4,7 @@ import { TrialHandler } from './psychojs/data-2020.1.js';
 import { Scheduler } from './psychojs/util-2020.1.js';
 import * as util from './psychojs/util-2020.1.js';
 import * as visual from './psychojs/visual-2020.1.js';
-import {SchedulerUtils} from './util/scheduler_utils.js';
+import * as SchedulerUtils from './util/scheduler_utils.js';
 import {FixationStim} from './stims/fixation_stim.js';
 
 

@@ -9,9 +9,10 @@ import {Vs_stim} from './stims/grid_stim.js';
 import {Phon_stim} from './stims/phon_stim.js';
 import {Staircase} from './util/staircase.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
-import {SchedulerUtils} from './util/scheduler_utils.js';
+import * as SchedulerUtils from './util/scheduler_utils.js';
 import {FixationStim} from './stims/fixation_stim.js';
 import * as constants from './util/constants.js';
+import * as ServerUtils from './util/server_utils.js';
 
 
 // class to handle the schedule of our staircase procedure. used in the "main"
@@ -229,7 +230,7 @@ class StaircaseScheduler extends Scheduler{
 
         let trial = "stair_"+this.mode;
 
-        SchedulerUtils.upload(this.data,trial,this.prob_code);
+        ServerUtils.upload(this.data,trial,this.prob_code);
 
         return Scheduler.Event.NEXT;
     }
