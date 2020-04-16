@@ -13,6 +13,12 @@ import {SingleScheduler} from '../single_sheduler.js';
 import * as constants from './constants.js';
 import { Scheduler } from '../psychojs/util-2020.1.js';
 
+///////////////////////////////////////////////////////////////////
+//                    Scheduler Utils                            //
+//                                                               //
+// this file contains a few helper functions.                    //
+//                                                               //
+///////////////////////////////////////////////////////////////////
 
 
 
@@ -97,38 +103,39 @@ export function quitOnEscape(psychoJS){
 
 //getInstructionsText(sched)
 //@param sched: the scheduler for whom we need to get the instructions
-//@return the correct instructions to use.
-export function getInstructionsText(sched){
+//@return the correct instruction image to use.
+export function getInstructionsImage(sched){
+    let image = new Image();
     if(sched instanceof StaircaseScheduler)
     {
         if (sched.correct_key =='j'){
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    return constants.INSTRUCTION_STAIR_VIS_J_PRACTICE;
+                    image.src=constants.INSTRUCTION_STAIR_VIS_J_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_STAIR_VIS_J;
+                    image.src= constants.INSTRUCTION_STAIR_VIS_J;
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    return  constants.INSTRUCTION_STAIR_PHON_J_PRACTICE;
+                    image.src= constants.INSTRUCTION_STAIR_PHON_J_PRACTICE;
                 }else{
-                    return constants.INSTRUCTION_STAIR_PHON_J;
+                    image.src=constants.INSTRUCTION_STAIR_PHON_J;
                 }
             }
         }else{
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    return constants.INSTRUCTION_STAIR_VIS_K_PRACTICE;
+                    image.src=constants.INSTRUCTION_STAIR_VIS_K_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_STAIR_VIS_K;
+                    image.src= constants.INSTRUCTION_STAIR_VIS_K;
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    return  constants.INSTRUCTION_STAIR_PHON_K_PRACTICE;
+                    image.src= constants.INSTRUCTION_STAIR_PHON_K_PRACTICE;
                 }else{
-                    return constants.INSTRUCTION_STAIR_PHON_K;
+                    image.src=constants.INSTRUCTION_STAIR_PHON_K;
                 }
             }
 
@@ -139,32 +146,32 @@ export function getInstructionsText(sched){
         if (sched.correct_key =='j'){
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    return constants.INSTRUCTION_DUAL_VIS_J_PRACTICE;
+                    image.src=constants.INSTRUCTION_DUAL_VIS_J_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_DUAL_VIS_J;
+                    image.src= constants.INSTRUCTION_DUAL_VIS_J;
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    return  constants.INSTRUCTION_DUAL_PHON_J_PRACTICE;
+                    image.src= constants.INSTRUCTION_DUAL_PHON_J_PRACTICE;
                 }else{
-                    return constants.INSTRUCTION_DUAL_PHON_J;
+                    image.src=constants.INSTRUCTION_DUAL_PHON_J;
                 }
             }
 
         }else{
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    return constants.INSTRUCTION_DUAL_VIS_K_PRACTICE;
+                    image.src=constants.INSTRUCTION_DUAL_VIS_K_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_DUAL_VIS_K;
+                    image.src= constants.INSTRUCTION_DUAL_VIS_K;
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    return  constants.INSTRUCTION_DUAL_PHON_K_PRACTICE;
+                    image.src= constants.INSTRUCTION_DUAL_PHON_K_PRACTICE;
                 }else{
-                    return constants.INSTRUCTION_DUAL_PHON_K;
+                    image.src=constants.INSTRUCTION_DUAL_PHON_K;
                 }
             }
 
@@ -179,16 +186,16 @@ export function getInstructionsText(sched){
         if (sched.correct_key =='j'){
             if(sched.rig == true){
                 if(sched.practice){
-                    return constants.INSTRUCTION_RIG_J_PRACTICE;
+                    image.src=constants.INSTRUCTION_RIG_J_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_RIG_J;
+                    image.src= constants.INSTRUCTION_RIG_J;
                 }
             }
             else if(sched.rig == false){
                 if(sched.practice){
-                    return constants.INSTRUCTION_SINGLE_J_PRACTICE;
+                    image.src=constants.INSTRUCTION_SINGLE_J_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_SINGLE_J;
+                    image.src= constants.INSTRUCTION_SINGLE_J;
                 }
 
             }
@@ -196,16 +203,16 @@ export function getInstructionsText(sched){
         }else{
             if(sched.rig == true){
                 if(sched.practice){
-                    return constants.INSTRUCTION_RIG_K_PRACTICE;
+                    image.src=constants.INSTRUCTION_RIG_K_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_RIG_K;
+                    image.src= constants.INSTRUCTION_RIG_K;
                 }
             }
             else if(sched.rig == false){
                 if(sched.practice){
-                    return constants.INSTRUCTION_SINGLE_K_PRACTICE;
+                    image.src=constants.INSTRUCTION_SINGLE_K_PRACTICE;
                 }else{
-                    return  constants.INSTRUCTION_SINGLE_K;
+                    image.src= constants.INSTRUCTION_SINGLE_K;
                 }
 
             }
@@ -215,7 +222,119 @@ export function getInstructionsText(sched){
         }
     }
 
-    return "could not determine correct instruction text.";
+    return image;
+}
+
+// getScheduleOrder(prob_count)
+// @param prob_count: the current participant number (0 for the first participant 1 for second..)
+//
+// @return object with fields 
+// correct_key: (can be k or j)
+// staircase_modes: array with "phon" and "vis" in the order to use for the participant.
+// dual_modes: array with "phon" and "vis" and "rig" in the order to use for the participant.
+export function getScheduleOrder(prob_count){
+    // get the list of all possibilities:
+    let base_order = {
+        correct_key:constants.KEYS_ACCEPT_DECLINE,
+        staircase_modes:["phon","vis"],
+        dual_modes:["phon","vis","rig"],
+    };
+    let all_orderings = [];
+
+    let possible_keys = ['j','k'];
+    // all keys.
+    for (let i=0;i<possible_keys.length;i++){
+        let key = possible_keys[i];
+        let current_order = clone(base_order);
+        current_order.correct_key = key;
+        all_orderings.push(current_order);
+    }
+    // staircases
+    let len = all_orderings.length;
+    for (let i= 0;i<len;i++){
+        let current_order = clone(all_orderings[i]);
+        let perms = perm(current_order.staircase_modes);
+        for (let j=0;j<perms.length;j++){
+            // compares the arrays
+            if( !(perms[j].every(function(value, index) { return value == current_order.staircase_modes[index]}))){ 
+                let new_order = clone(current_order);
+                new_order.staircase_modes = perms[j];
+                all_orderings.push(new_order);
+            }
+        }
+    }
+
+    // duals
+    len = all_orderings.length;
+    for (let i= 0;i<len;i++){
+        let current_order = clone(all_orderings[i]);
+        let perms = perm(current_order.dual_modes);
+        for (let j=0;j<perms.length;j++){
+            // compares the arrays
+            if( !(perms[j].every(function(value, index) { return value == current_order.dual_modes[index]}))){ 
+                let new_order = clone(current_order);
+                new_order.dual_modes = perms[j];
+                all_orderings.push(new_order);
+            }
+        }
+    }
+
+    return all_orderings[prob_count%all_orderings.length];
+}
+
+// copied from stackoverflow.
+// generates all possible permutations for a given array.
+export function perm(xs) {
+    let ret = [];
+
+    for (let i = 0; i < xs.length; i = i + 1) {
+        let rest = perm(xs.slice(0, i).concat(xs.slice(i + 1)));
+
+        if(!rest.length) {
+            ret.push([xs[i]])
+        } else {
+            for(let j = 0; j < rest.length; j = j + 1) {
+                ret.push([xs[i]].concat(rest[j]))
+            }
+        }
+    }
+    return ret;
+}
+
+// copied from stackoverflow.
+// copies an js object
+export function clone(obj) {
+    var copy;
+
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+
+    // Handle Date
+    if (obj instanceof Date) {
+        copy = new Date();
+        copy.setTime(obj.getTime());
+        return copy;
+    }
+
+    // Handle Array
+    if (obj instanceof Array) {
+        copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+            copy[i] = clone(obj[i]);
+        }
+        return copy;
+    }
+
+    // Handle Object
+    if (obj instanceof Object) {
+        copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+
+    throw new Error("Unable to copy obj! Its type isn't supported.");
 }
 
 

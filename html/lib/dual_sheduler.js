@@ -55,15 +55,14 @@ class DualScheduler extends Scheduler{
 
         this.loop_nr = 0;
 
-
     }
 
 
     // sets up the schedule of the staircase procedure
     setupSchedule(){
         // setup the schedule
-        let instruction_text = SchedulerUtils.getInstructionsText(this);
-        this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,text:instruction_text}));
+        let instr_img = SchedulerUtils.getInstructionsImage(this);
+        this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,image:instr_img}));
 
         let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
         for(let i= 0 ; i<n_loops ; i++)
@@ -85,8 +84,6 @@ class DualScheduler extends Scheduler{
         this.fixation_time_2 = 1;
 
 
-
-
         this.t_dual_pres = SchedulerUtils.getStartEndTimes(0,this.dual_task_pres_time);
 
         this.t_present =  SchedulerUtils.getStartEndTimes(this.t_dual_pres.end+this.fixation_time_1,this.present_time);
@@ -98,9 +95,6 @@ class DualScheduler extends Scheduler{
 
         this.total_loop_time = this.dual_task_pres_time +this.fixation_time_1+this.present_time +this.answer_time + this.dual_answer_time + this.fixation_time_2;
 
-
-        console.log("time total: ",this.total_loop_time);
-
     }
 
     loopHead(){
@@ -109,8 +103,10 @@ class DualScheduler extends Scheduler{
 
 
         this.fixation = FixationStim.getNFixations(this.psychojs.window,4);
+
         // random boolean
         this.dual_task_correct = Math.random() >= 0.5; 
+
         this.dual_stims = this.dual_stim_class.getPairForTrial(this.dual_difficulty,this.psychojs.window,this.dual_task_correct);
 
         this.frameN = 0;
@@ -207,6 +203,7 @@ class DualScheduler extends Scheduler{
         loopdata.ordered = this.stim.isOrdered();
         loopdata.distance = this.stim.getDistance();
 
+        loopdata.dual_stim = this.dual_stims.toString();
         loopdata.datetime = new Date().toLocaleString();
 
 

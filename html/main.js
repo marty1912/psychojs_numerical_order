@@ -12,9 +12,10 @@ import {SingleScheduler} from './lib/single_sheduler.js';
 import {DualScheduler} from './lib/dual_sheduler.js';
 import * as constants from './lib/util/constants.js';
 import * as ServerUtils from './lib/util/server_utils.js';
+import * as SchedulerUtils from './lib/util/scheduler_utils.js';
 
 const psychoJS = new PsychoJS({
-    debug: true
+    debug: true // TODO disable!
 });
 
 // open window:
@@ -26,12 +27,13 @@ psychoJS.openWindow({
 });
 
 let expName = 'Untersuchung zu Ordinalitäten';  
-var expInfo = {'Probanden Code': ''};
+var expInfo = {'Probandencode':'' };
 
 // schedule the experiment:
 psychoJS.schedule(psychoJS.gui.DlgFromDict({
     dictionary: expInfo,
-    title: "Bitte Tragen Sie hier Ihren Probandencode ein."
+    title: "Bitte Tragen Sie hier Ihren Probandencode ein.",
+    logoUrl:'images/test.png',
 }));
 
 const mainScheduler = new Scheduler(psychoJS);
@@ -46,19 +48,17 @@ psychoJS.start({
 
 
 function main() {
-    expInfo['date'] = util.MonotonicClock.getDateStr();  // add a simple timestamp
-    expInfo['expName'] = expName;
 
-        // add info from the URL:
+    // add info from the URL:
     util.addInfoFromUrl(expInfo);
 
-    let prob_code = expInfo['Probanden Code'];
+    let prob_code = expInfo['Probandencode'];
     getPCSpecs(prob_code);
 
 
     // setup the experiment schedule 
     let prob_count = ServerUtils.getCountFromServer();
-    let order = getScheduleOrder(prob_count);
+    let order = SchedulerUtils.getScheduleOrder(prob_count);
 
     // staircases first
     // we use an object so we can give it to the dual task later. it needs it to get the correct difficulty.
@@ -140,6 +140,9 @@ function main() {
     }
 
 
+    // after the experiment we redirect to the limesurvey for Versuchsscheine.
+    mainScheduler.add(function() {window.location.href = "http://new_url.com";}); 
+
     return Scheduler.Event.NEXT;
 }
 
@@ -171,115 +174,4 @@ function getPCSpecs(prob_code){
 }
 
 
-// getScheduleOrder(prob_count)
-// @param prob_count: the current participant number (0 for the first participant 1 for second..)
-//
-// @return object with fields 
-// correct_key: (can be k or j)
-// staircase_modes: array with "phon" and "vis" in the order to use for the participant.
-// dual_modes: array with "phon" and "vis" and "rig" in the order to use for the participant.
-function getScheduleOrder(prob_count){
-    // get the list of all possibilities:
-    let base_order = {
-        correct_key:constants.KEYS_ACCEPT_DECLINE,
-        staircase_modes:["phon","vis"],
-        dual_modes:["phon","vis","rig"],
-    };
-    let all_orderings = [];
-
-    let possible_keys = ['j','k'];
-    // all keys.
-    for (let i=0;i<possible_keys.length;i++){
-        let key = possible_keys[i];
-        let current_order = clone(base_order);
-        current_order.correct_key = key;
-        all_orderings.push(current_order);
-    }
-    // staircases
-    let len = all_orderings.length;
-    for (let i= 0;i<len;i++){
-        let current_order = clone(all_orderings[i]);
-        let perms = perm(current_order.staircase_modes);
-        for (let j=0;j<perms.length;j++){
-            // compares the arrays
-            if( !(perms[j].every(function(value, index) { return value == current_order.staircase_modes[index]}))){ 
-                let new_order = clone(current_order);
-                new_order.staircase_modes = perms[j];
-                all_orderings.push(new_order);
-            }
-        }
-    }
-
-    // duals
-    len = all_orderings.length;
-    for (let i= 0;i<len;i++){
-        let current_order = clone(all_orderings[i]);
-        let perms = perm(current_order.dual_modes);
-        for (let j=0;j<perms.length;j++){
-            // compares the arrays
-            if( !(perms[j].every(function(value, index) { return value == current_order.dual_modes[index]}))){ 
-                let new_order = clone(current_order);
-                new_order.dual_modes = perms[j];
-                all_orderings.push(new_order);
-            }
-        }
-    }
-
-    return all_orderings[prob_count%all_orderings.length];
-}
-
-// copied from stackoverflow.
-// generates all possible permutations for a given array.
-function perm(xs) {
-    let ret = [];
-
-    for (let i = 0; i < xs.length; i = i + 1) {
-        let rest = perm(xs.slice(0, i).concat(xs.slice(i + 1)));
-
-        if(!rest.length) {
-            ret.push([xs[i]])
-        } else {
-            for(let j = 0; j < rest.length; j = j + 1) {
-                ret.push([xs[i]].concat(rest[j]))
-            }
-        }
-    }
-    return ret;
-}
-
-// copied from stackoverflow.
-// copies an js object
-function clone(obj) {
-    var copy;
-
-    // Handle the 3 simple types, and null or undefined
-    if (null == obj || "object" != typeof obj) return obj;
-
-    // Handle Date
-    if (obj instanceof Date) {
-        copy = new Date();
-        copy.setTime(obj.getTime());
-        return copy;
-    }
-
-    // Handle Array
-    if (obj instanceof Array) {
-        copy = [];
-        for (var i = 0, len = obj.length; i < len; i++) {
-            copy[i] = clone(obj[i]);
-        }
-        return copy;
-    }
-
-    // Handle Object
-    if (obj instanceof Object) {
-        copy = {};
-        for (var attr in obj) {
-            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
-        }
-        return copy;
-    }
-
-    throw new Error("Unable to copy obj! Its type isn't supported.");
-}
 

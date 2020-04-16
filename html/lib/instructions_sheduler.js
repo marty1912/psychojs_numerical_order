@@ -9,10 +9,10 @@ import {FixationStim} from './stims/fixation_stim.js';
 
 
 class InstuctionsScheduler extends Scheduler{
-    constructor({psychojs,text="TODO: get instructions here\n press j or k to continue.",correct_key='j',pause_after=4}){
+    constructor({psychojs,image,correct_key='j',pause_after=4}){
         super(psychojs);
         this.psychojs = psychojs;
-        this.text = text;
+        this.image = image;
 
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
 
@@ -39,16 +39,15 @@ class InstuctionsScheduler extends Scheduler{
 
     instructionsInit(){
 
-        this.instructions = new visual.TextStim({
+        this.instructions = new visual.ImageStim({
             win: this.psychojs.window,
-            name: 'text',
-            text: this.text,
-            font: 'Arial',
-            units: undefined, 
+            name: 'instructions',
+            image: this.image,
             pos: [0, 0], height: 0.03,  wrapWidth: true, ori: 0,
-            color: new util.Color('black'),  opacity: 1,
+            opacity: 1,
             depth: 0.0 
         });
+
 
         this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
 
@@ -117,7 +116,7 @@ class InstuctionsScheduler extends Scheduler{
         SchedulerUtils.activateAndDeactivateStim(t,0,this.fixation_time,this.fixation,this.frameN,this.psychojs);
 
         SchedulerUtils.quitOnEscape(this.psychojs); 
-        
+
 
         this.frameN = this.frameN + 1;// number of completed frames (so 0 is the first frame)
         // refresh the screen if continuing

@@ -63,18 +63,13 @@ export function upload(data,trial,prob_code){
     let ndata = "filename="+file_name+"&data="+csv;
 
     let http = new XMLHttpRequest();
-    http.open('POST', 'handler.php', true);
+    // we use a synchronous request. because we dont want to risk a loss of data 
+    // (last param is asynchronous)
+    http.open('POST', 'handler.php', false);
 
     //Send the proper header information along with the request
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-    // register callback for when we get the reply from the server
-    http.onreadystatechange = function() {
-        if(http.readyState == 4 && http.status == 200) {
-            //console.log(http.responseText);
-        }
-    }
-
+    
     http.send(ndata);
     //console.log("data sent. ");
 
