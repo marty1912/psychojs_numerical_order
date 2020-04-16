@@ -80,6 +80,7 @@ function main() {
         }
     }
 
+
     // single task 
     mainScheduler.add(new SingleScheduler({psychojs: psychoJS,
         prob_code:prob_code ,
@@ -127,14 +128,14 @@ function main() {
                 psychojs:psychoJS,
                 mode:order.dual_modes[i],
                 correct_key:order.correct_key,
-                staircase_sched:staircases.phon,
+                staircase_sched:staircases.vis,
                 practice:true}));
 
             mainScheduler.add(new DualScheduler({
                 psychojs:psychoJS,
                 mode:order.dual_modes[i],
                 correct_key:order.correct_key,
-                staircase_sched:staircases.phon,
+                staircase_sched:staircases.vis,
                 practice:false}));
         }
 

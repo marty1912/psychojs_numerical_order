@@ -36,7 +36,7 @@ export const INSTRUCTION_DUAL_VIS_K= 'images/Slide20.jpg';
 export const INSTRUCTION_RIG_J_PRACTICE = 'images/Slide21.jpg';
 export const INSTRUCTION_RIG_J= 'images/Slide22.jpg';
 
-export const INSTRUCTION_RIG_K_PRACTICE = 'images/Slide23.jpg';
-export const INSTRUCTION_RIG_K= 'images/Slide24.jpg';
+export const INSTRUCTION_RIG_K_PRACTICE = 'images/Slide24.jpg';
+export const INSTRUCTION_RIG_K= 'images/Slide25.jpg';
 
 export const INSTRUCTION_RIG_2 = 'images/Slide26.jpg';

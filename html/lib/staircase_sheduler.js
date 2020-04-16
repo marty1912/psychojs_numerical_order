@@ -52,16 +52,23 @@ class StaircaseScheduler extends Scheduler{
     // the difficulty will be the mean of all the reversals of the staircase.
     // Use this function after the staircase procedure has finished!!
     getDifficulty(){
-        if(this.debug){
-            return 10
-        }
 
         let reversals = this.staircase.getReversals();
+
+        console.log("(getDifficulty): reversals: ",reversals);
+        if(reversals.length == 0){
+            return this.staircase.getCurrentVal();
+        }
+
         let sum = 0;
         for(let i= 0;i<reversals.length;i++){
             sum+=reversals.val;
         }
         let mean = sum/reversals.length;
+
+        mean = Math.floor(mean);
+
+        console.log("(getDifficulty): mean: ",mean);
 
         return mean;
     }
