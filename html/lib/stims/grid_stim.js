@@ -1,6 +1,6 @@
-import { PsychoJS } from './core-2020.1.js';
-import { Color } from './util-2020.1.js';
-import { Polygon,Rect } from './visual-2020.1.js';
+import { PsychoJS } from '../psychojs/core-2020.1.js';
+import { Color } from '../psychojs/util-2020.1.js';
+import { Polygon,Rect } from '../psychojs/visual-2020.1.js';
 
 
 

@@ -1,17 +1,17 @@
-import { PsychoJS } from './core-2020.1.js';
-import { Color } from './util-2020.1.js';
-import { TextStim } from './visual-2020.1.js';
-import * as util from './util-2020.1.js';
-import * as visual from './visual-2020.1.js';
-import * as sound from './sound-2020.1.js';
-import {Phon_stim} from './phon_stim.js';
-import {Ord_stim} from './ord_stim.js';
-import {Vs_stim} from './grid_stim.js';
-import {StaircaseScheduler} from './staircase_sheduler.js';
-import {DualScheduler} from './dual_sheduler.js';
-import {SingleScheduler} from './single_sheduler.js';
+import { PsychoJS } from '../psychojs/core-2020.1.js';
+import { Color } from '../psychojs/util-2020.1.js';
+import { TextStim } from '../psychojs/visual-2020.1.js';
+import * as util from '../psychojs/util-2020.1.js';
+import * as visual from '../psychojs/visual-2020.1.js';
+import * as sound from '../psychojs/sound-2020.1.js';
+import {Phon_stim} from '../stims/phon_stim.js';
+import {Ord_stim} from '../stims/ord_stim.js';
+import {Vs_stim} from '../stims/grid_stim.js';
+import {StaircaseScheduler} from '../staircase_sheduler.js';
+import {DualScheduler} from '../dual_sheduler.js';
+import {SingleScheduler} from '../single_sheduler.js';
 import * as constants from './constants.js';
-import { Scheduler } from './util-2020.1.js';
+import { Scheduler } from '../psychojs/util-2020.1.js';
 
 
 class SchedulerUtils {

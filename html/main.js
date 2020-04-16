@@ -1,16 +1,16 @@
-﻿import { PsychoJS } from './lib/core-2020.1.js';
-import * as core from './lib/core-2020.1.js';
-import { TrialHandler } from './lib/data-2020.1.js';
-import { Scheduler } from './lib/util-2020.1.js';
-import * as util from './lib/util-2020.1.js';
-import * as visual from './lib/visual-2020.1.js';
-import * as sound from './lib/sound-2020.1.js';
-import {Vs_stim} from './lib/grid_stim.js';
-import {Phon_stim} from './lib/phon_stim.js';
+﻿import { PsychoJS } from './lib/psychojs/core-2020.1.js';
+import * as core from './lib/psychojs/core-2020.1.js';
+import { TrialHandler } from './lib/psychojs/data-2020.1.js';
+import { Scheduler } from './lib/psychojs/util-2020.1.js';
+import * as util from './lib/psychojs/util-2020.1.js';
+import * as visual from './lib/psychojs/visual-2020.1.js';
+import * as sound from './lib/psychojs/sound-2020.1.js';
+import {Vs_stim} from './lib/stims/grid_stim.js';
+import {Phon_stim} from './lib/stims/phon_stim.js';
 import {StaircaseScheduler} from './lib/staircase_sheduler.js';
 import {SingleScheduler} from './lib/single_sheduler.js';
 import {DualScheduler} from './lib/dual_sheduler.js';
-import {SchedulerUtils} from './lib/scheduler_utils.js';
+import {SchedulerUtils} from './lib/util/scheduler_utils.js';
 
 const psychoJS = new PsychoJS({
     debug: true
@@ -168,6 +168,7 @@ function getPCSpecs(prob_code){
 
     SchedulerUtils.upload([user_info],"user_info_",prob_code);
 }
+
 
 // getScheduleOrder(prob_count)
 // @param prob_count: the current participant number (0 for the first participant 1 for second..)

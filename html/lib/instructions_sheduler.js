@@ -1,12 +1,11 @@
-﻿import { PsychoJS } from './core-2020.1.js';
-import * as core from './core-2020.1.js';
-import { TrialHandler } from './data-2020.1.js';
-import { Scheduler } from './util-2020.1.js';
-import * as util from './util-2020.1.js';
-import * as visual from './visual-2020.1.js';
-import * as sound from './sound-2020.1.js';
-import {SchedulerUtils} from './scheduler_utils.js';
-import {FixationStim} from './fixation_stim.js';
+﻿import { PsychoJS } from './psychojs/core-2020.1.js';
+import * as core from './psychojs/core-2020.1.js';
+import { TrialHandler } from './psychojs/data-2020.1.js';
+import { Scheduler } from './psychojs/util-2020.1.js';
+import * as util from './psychojs/util-2020.1.js';
+import * as visual from './psychojs/visual-2020.1.js';
+import {SchedulerUtils} from './util/scheduler_utils.js';
+import {FixationStim} from './stims/fixation_stim.js';
 
 
 class InstuctionsScheduler extends Scheduler{

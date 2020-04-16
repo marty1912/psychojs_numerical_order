@@ -1,15 +1,15 @@
-﻿import { PsychoJS } from './core-2020.1.js';
-import * as core from './core-2020.1.js';
-import { TrialHandler } from './data-2020.1.js';
-import { Scheduler } from './util-2020.1.js';
-import * as util from './util-2020.1.js';
-import * as visual from './visual-2020.1.js';
-import * as sound from './sound-2020.1.js';
-import {Ord_stim} from './ord_stim.js';
+﻿import { PsychoJS } from './psychojs/core-2020.1.js';
+import * as core from './psychojs/core-2020.1.js';
+import { TrialHandler } from './psychojs/data-2020.1.js';
+import { Scheduler } from './psychojs/util-2020.1.js';
+import * as util from './psychojs/util-2020.1.js';
+import * as visual from './psychojs/visual-2020.1.js';
+import * as sound from './psychojs/sound-2020.1.js';
+import {Ord_stim} from './stims/ord_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
-import {FixationStim} from './fixation_stim.js';
-import {SchedulerUtils} from './scheduler_utils.js';
-import * as constants from './constants.js';
+import {FixationStim} from './stims/fixation_stim.js';
+import {SchedulerUtils} from './util/scheduler_utils.js';
+import * as constants from './util/constants.js';
 
 class SingleScheduler extends Scheduler{
     constructor({psychojs,prob_code,rig=false,correct_key='j',practice=false,debug=false}){
