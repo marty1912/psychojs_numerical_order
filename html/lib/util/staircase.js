@@ -28,10 +28,17 @@ class  Staircase {
 
     //setCurrentVal()
     // setter for currentval. clamps between min and max val
-        // @param val: the new value
+    // @param val: the new value
     setCurrentVal(val){
         // clamps the value between the min and max
-this.current_val = Math.max(this.min_val, Math.min(val, this.max_val));
+        this.current_val = Math.max(this.min_val, Math.min(val, this.max_val));
+
+        // so we take the max and min into account (otherwise the reversals would give a wrong mean)
+        if(val != this.current_val){
+
+            let trial_correct =(val<this.current_val)? false : true; 
+            this.reversals.push({val:this.current_val,correct:trial_correct});
+        }
     }
     // getNewVal(trial_correct)
     // calculates the next value of the staircase. 
@@ -81,7 +88,7 @@ this.current_val = Math.max(this.min_val, Math.min(val, this.max_val));
                 this.correct_streak = 0;
                 this.setCurrentVal(this.current_val + 1);
                 if(this.direction == -1){
-                this.reversals.push({val:this.current_val,correct:trial_correct});
+                    this.reversals.push({val:this.current_val,correct:trial_correct});
                     this.direction = +1;
                 }
             }
@@ -89,7 +96,7 @@ this.current_val = Math.max(this.min_val, Math.min(val, this.max_val));
                 this.incorrect_streak = 0;
                 this.setCurrentVal(this.current_val - 1);
                 if(this.direction == +1){
-                this.reversals.push({val:this.current_val,correct:trial_correct});
+                    this.reversals.push({val:this.current_val,correct:trial_correct});
                     this.direction = -1;
                 }
             }
@@ -101,12 +108,12 @@ this.current_val = Math.max(this.min_val, Math.min(val, this.max_val));
 
     // getReversals()
     // @return returns all the reversals ("umkehrpunkte") in the staircase so far
-        getReversals(){
-            
-            return this.reversals;
+    getReversals(){
 
-        }
+        return this.reversals;
 
     }
-    
+
+}
+
 export { Staircase};

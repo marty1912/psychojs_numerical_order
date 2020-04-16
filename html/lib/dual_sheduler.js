@@ -38,7 +38,6 @@ class DualScheduler extends Scheduler{
         }
 
 
-        this.dual_difficulty = staircase_sched.getDifficulty();
 
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
 
@@ -98,6 +97,8 @@ class DualScheduler extends Scheduler{
     }
 
     loopHead(){
+
+        this.dual_difficulty = staircase_sched.getDifficulty();
 
         this.stim = this.all_stims[this.loop_nr];
 
