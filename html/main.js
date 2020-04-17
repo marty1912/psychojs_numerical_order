@@ -15,7 +15,7 @@ import * as ServerUtils from './lib/util/server_utils.js';
 import * as SchedulerUtils from './lib/util/scheduler_utils.js';
 
 const psychoJS = new PsychoJS({
-    debug: true // TODO disable!
+    debug: false
 });
 
 // open window:
