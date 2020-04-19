@@ -10,6 +10,8 @@ import {Phon_stim} from './lib/stims/phon_stim.js';
 import {StaircaseScheduler} from './lib/staircase_sheduler.js';
 import {SingleScheduler} from './lib/single_sheduler.js';
 import {DualScheduler} from './lib/dual_sheduler.js';
+import {StimScheduler} from './lib/stim_scheduler.js';
+import {FixationStim} from './lib/stims/fixation_stim.js';
 import * as constants from './lib/util/constants.js';
 import * as ServerUtils from './lib/util/server_utils.js';
 import * as SchedulerUtils from './lib/util/scheduler_utils.js';
@@ -18,6 +20,7 @@ const psychoJS = new PsychoJS({
     debug: false
 });
 
+
 // open window:
 psychoJS.openWindow({
     fullscr: true,
@@ -25,6 +28,8 @@ psychoJS.openWindow({
     units: 'height',
     waitBlanking: true
 });
+
+
 let expName = 'Untersuchung zu Ordinalitäten';  
 var expInfo = {'Probandencode':'' };
 
@@ -48,11 +53,16 @@ psychoJS.start({
 
 function main() {
 
+
     // add info from the URL:
     util.addInfoFromUrl(expInfo);
 
     let prob_code = expInfo['Probandencode'];
     getPCSpecs(prob_code);
+
+
+    // workaround for problems with instructions.
+    mainScheduler.add(new StimScheduler({psychojs:psychoJS,stim:new FixationStim({win:psychoJS.window}),duration:4}));
 
 
     // setup the experiment schedule 
@@ -149,6 +159,8 @@ function main() {
 
     return Scheduler.Event.NEXT;
 }
+
+
 
 // getPCSpecs(prob_code)
 // gets the specs of the users pc and uploads them to the server.

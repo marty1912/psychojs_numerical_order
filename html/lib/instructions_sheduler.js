@@ -52,8 +52,6 @@ class InstuctionsScheduler extends Scheduler{
 
         this.keyboard = new core.Keyboard({psychoJS: this.psychojs, clock: new util.Clock(), waitForStart: true});
 
-        this.instructions.setAutoDraw(true);
-
         this.clock.reset();
 
         return Scheduler.Event.NEXT;
@@ -61,9 +59,13 @@ class InstuctionsScheduler extends Scheduler{
 
     showInstructions(){
 
+
         let t=this.clock.getTime();
         let time_adjusted_with_frame= 0
         let t_keyboard_enable= 3
+
+        // maybe bugfix. we do this later.. and every loop.
+        this.instructions.setAutoDraw(true);
 
         time_adjusted_with_frame = this.t_test_end - this.psychojs.window.monitorFramePeriod * 0.75;  // most of one frame period left
 
