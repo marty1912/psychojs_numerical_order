@@ -94,13 +94,7 @@ class SingleScheduler extends Scheduler{
         this.answer_time = 1.5;
         this.fixation_time_2 = 1;
 
-        if (this.debug){
-            this.fixation_time_1 = 0.1;
-            this.present_time = 0.1;
-            this.answer_time = 0.1;
-            this.fixation_time_2 = 0.1;
-        }
-
+        
 
 
         this.total_loop_time =  this.fixation_time_1+this.present_time +this.answer_time+this.fixation_time_2;
@@ -119,7 +113,14 @@ class SingleScheduler extends Scheduler{
         this.stim = this.all_stims[this.loop_nr];
 
 
+        this.fixation_no_flash = FixationStim.getNFixations(this.psychojs.window,1);
+        this.fixation_no_flash[0].setAutoDraw(true);
+
         this.fixation = FixationStim.getNFixations(this.psychojs.window,4);
+        this.fixation[0].setAutoDraw(true);
+
+        this.fixation_no_flash[0].setAutoDraw(false);
+
 
         this.frameN = 0;
 
@@ -154,6 +155,7 @@ class SingleScheduler extends Scheduler{
 
         // fixation
         SchedulerUtils.activateAndDeactivateStim(t,this.t_present.end,this.total_loop_time,this.fixation[1],this.frameN,this.psychojs);
+
 
         //keyboard handling
         SchedulerUtils.activateAndDeactivateKeyboard(t,this.t_present.start,this.t_answer.end,this.keyboard,this.frameN,this.psychojs);

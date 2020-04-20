@@ -64,7 +64,6 @@ function main() {
     // workaround for problems with instructions.
     mainScheduler.add(new StimScheduler({psychojs:psychoJS,stim:new FixationStim({win:psychoJS.window}),duration:4}));
 
-
     // setup the experiment schedule 
     let prob_count = ServerUtils.getCountFromServer();
     let order = SchedulerUtils.getScheduleOrder(prob_count);

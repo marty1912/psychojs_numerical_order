@@ -104,7 +104,14 @@ class DualScheduler extends Scheduler{
         this.stim = this.all_stims[this.loop_nr];
 
 
+        this.fixation_no_flash = FixationStim.getNFixations(this.psychojs.window,1);
+        this.fixation_no_flash[0].setAutoDraw(true);
+
         this.fixation = FixationStim.getNFixations(this.psychojs.window,4);
+        this.fixation[0].setAutoDraw(true);
+
+        this.fixation_no_flash[0].setAutoDraw(false);
+
 
         // random boolean
         this.dual_task_correct = Math.random() >= 0.5; 
