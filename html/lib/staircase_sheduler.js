@@ -101,7 +101,7 @@ class StaircaseScheduler extends Scheduler{
         this.fixation_time_2 = 1;
 
         this.learn_time = 0.4 * this.stimpair.learn.getDifficulty();
-        this.test_time = learn_time;
+        this.test_time = this.learn_time;
 
         this.total_loop_time =  this.learn_time+this.fixation_time_1+this.test_time+this.fixation_time_2;
 
