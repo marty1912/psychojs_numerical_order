@@ -89,6 +89,10 @@ class StaircaseScheduler extends Scheduler{
             this.add(this.loopHead);
             this.add(this.loopBodyEachFrame);
             this.add(this.loopEnd);
+
+            if(this.practice){
+                //TODO add feedback.
+            }
         }
         this.add(this.saveData);
     }

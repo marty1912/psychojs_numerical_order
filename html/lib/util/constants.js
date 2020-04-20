@@ -1,7 +1,8 @@
-export const PRACTICE_LEN = 2;
+export const PRACTICE_LEN = 4;
 export const KEYS_ACCEPT_DECLINE = ['j','k']; // TODO use everywhere!
 export const KEY_RIG = 's'; // TODO use everywhere!
 
+export const URL_REDIRECT =  "https://survey2.edu.uni-graz.at/919136/lang-de";
 
 export const INSTRUCTION_STAIR_PHON_J_PRACTICE = 'images/Slide1.jpg';
 export const INSTRUCTION_STAIR_PHON_J= 'images/Slide2.jpg';

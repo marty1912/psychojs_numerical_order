@@ -94,8 +94,13 @@ export function getStartEndTimes(start_time,duration){
 // checks if the user pressed escape and ends the expreriment if so.
 export function quitOnEscape(psychoJS){
     if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
+
+        window.location.href = constants.URL_REDIRECT;
+
         psychoJS.window.close();
         //psychoJS.quit({message: "Die [Escape] Taste wurde gedrückt. Das Experiment wurde abgebrochen. Danke für Ihre Teilnahme.", isCompleted: false});
+        // redirect:
+        
         return Scheduler.Event.Quit; 
     }
     return false;
