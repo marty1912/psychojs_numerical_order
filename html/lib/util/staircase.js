@@ -5,7 +5,7 @@ class  Staircase {
     // @param min_val: the maximum value that the staircase is allowed to go to
     // @param n_up: the number of correctly solved trials until the staircase adds 1 to the difficulty
     // @param n_down: the number of correctly solved trials until the staircase adds -1 to the difficulty
-    constructor(startval=7,min_val=3,max_val=11,n_up=3,n_down=1)
+    constructor(startval=6,min_val=3,max_val=11,n_up=3,n_down=1)
     {
         this.current_val = startval;
         this.min_val = min_val;

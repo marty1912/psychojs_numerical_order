@@ -47,7 +47,7 @@ class StaircaseScheduler extends Scheduler{
 
         this.setupSchedule();
 
-        this.count_loops = 0;
+        this.loop_nr = 0;
         this.data = []
     }
 
@@ -81,7 +81,7 @@ class StaircaseScheduler extends Scheduler{
     // adds all functions to the scheduler
     setupSchedule(){
         // setup the schedule
-        
+
         SchedulerUtils.addInstructionsToSchedule(this);
 
         let n_trials = (this.practice)? constants.PRACTICE_LEN : 25;
@@ -93,11 +93,10 @@ class StaircaseScheduler extends Scheduler{
             this.add(this.loopBodyEachFrame);
             this.add(this.loopEnd);
 
-        // added for feedback
+            // added for feedback
             if(this.practice){
                 this.feedbacks.push(new Scheduler(this.psychojs));
                 this.add(this.feedbacks[i]);
-                console.log("added feedback");
             }
         }
         this.add(this.saveData);
@@ -181,7 +180,7 @@ class StaircaseScheduler extends Scheduler{
 
 
         SchedulerUtils.quitOnEscape(this.psychojs);
-        
+
 
         if (t > this.total_loop_time) {
             console.log("next loop..");
@@ -245,26 +244,18 @@ class StaircaseScheduler extends Scheduler{
         this.data.push(loopdata);
 
         this.current_difficulty = this.staircase.getNewVal(trial_was_correct);
-        
+
         // added for feedback
         if (this.practice){
-            let feedback = {};
-            feedback.correct   = SchedulerUtils.getFeedbackStim(this.psychojs.window,this.mode,true);
-            feedback.incorrect = SchedulerUtils.getFeedbackStim(this.psychojs.window,this.mode,false);
 
-            console.log("feedback:",feedback,);
-            console.log("trial:",trial_was_correct);
-            if(trial_was_correct){
-                this.feedbacks[this.count_loops].add(new StimScheduler({psychojs:this.psychojs,stim:feedback.correct,duration:1}));
-            }
-            else
-            {
-                this.feedbacks[this.count_loops].add(new StimScheduler({psychojs:this.psychojs,stim:feedback.incorrect,duration:1}));
-            }
+            this.feedbacks[this.loop_nr].add(new StimScheduler({
+                psychojs:this.psychojs,
+                stim:SchedulerUtils.getFeedbackStim(this.psychojs.window,this.mode,trial_was_correct),
+                duration:2}));
         }
-        
 
-        this.count_loops++;
+
+        this.loop_nr++;
         return Scheduler.Event.NEXT;
 
     }

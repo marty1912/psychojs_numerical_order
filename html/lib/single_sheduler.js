@@ -55,15 +55,19 @@ class SingleScheduler extends Scheduler{
 
             this.add(this.initRig);
 
+        // added for feedback
+        this.feedbacks = [];
             let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
             for(let i= 0 ; i<n_loops ; i++)
             {
                 this.add(this.loopHead);
                 this.add(this.loopBodyEachFrame);
                 this.add(this.loopEnd);
-                if(this.practice){
-                    //TODO add feedback.
-                }
+             if(this.practice){
+                this.feedbacks.push(new Scheduler(this.psychojs));
+                this.add(this.feedbacks[i]);
+            }
+
             }
             this.add(this.saveData);
         }
@@ -237,6 +241,16 @@ class SingleScheduler extends Scheduler{
 
         // our own approach to data stuff.
         this.data.push(loopdata);
+
+            // added for feedback
+        if (this.practice){
+            let single_correct = loopdata.correct ? true : false;
+
+                this.feedbacks[this.loop_nr].add(new StimScheduler({
+                    psychojs:this.psychojs,
+                    stim:SchedulerUtils.getFeedbackStim(this.psychojs.window,'single',single_correct),
+                    duration:2}));
+        }
 
         this.loop_nr++;
 

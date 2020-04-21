@@ -63,6 +63,9 @@ class DualScheduler extends Scheduler{
         // setup the schedule
         SchedulerUtils.addInstructionsToSchedule(this);
 
+
+        // added for feedback
+        this.feedbacks = [];
         let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
         for(let i= 0 ; i<n_loops ; i++)
         {
@@ -70,8 +73,9 @@ class DualScheduler extends Scheduler{
             this.add(this.loopBodyEachFrame);
             this.add(this.loopEnd);
 
-            if(this.practice){
-                //TODO add feedback.
+             if(this.practice){
+                this.feedbacks.push(new Scheduler(this.psychojs));
+                this.add(this.feedbacks[i]);
             }
         }
         this.add(this.saveData);
@@ -223,7 +227,6 @@ class DualScheduler extends Scheduler{
         loopdata.dual_stim = this.dual_stims.toString();
         loopdata.datetime = new Date().toLocaleString();
 
-
         let response_ord = this.checkCorrectKey(this.all_pressed_keys);
         if(response_ord != undefined){
             loopdata.correct_ord = response_ord.correct; 
@@ -240,6 +243,21 @@ class DualScheduler extends Scheduler{
 
         // our own approach to data stuff.
         this.data.push(loopdata);
+
+            // added for feedback
+        if (this.practice){
+            let dual_correct = loopdata.correct_dual ? true : false;
+            let single_correct = loopdata.correct_ord ? true : false;
+
+                this.feedbacks[this.loop_nr].add(new StimScheduler({
+                    psychojs:this.psychojs,
+                    stim:SchedulerUtils.getFeedbackStim(this.psychojs.window,'single',single_correct),
+                    duration:2}));
+                this.feedbacks[this.loop_nr].add(new StimScheduler({
+                    psychojs:this.psychojs,
+                    stim:SchedulerUtils.getFeedbackStim(this.psychojs.window,this.mode,dual_correct),
+                    duration:2}));
+        }
 
         this.loop_nr++;
 
