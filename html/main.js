@@ -54,6 +54,7 @@ psychoJS.start({
 function main() {
 
 
+    SchedulerUtils.initImages();
     // add info from the URL:
     util.addInfoFromUrl(expInfo);
 
@@ -62,7 +63,8 @@ function main() {
 
 
     // workaround for problems with instructions.
-    mainScheduler.add(new StimScheduler({psychojs:psychoJS,stim:new FixationStim({win:psychoJS.window}),duration:4}));
+    let init_sched = new StimScheduler({psychojs:psychoJS,stim:new FixationStim({win:psychoJS.window}),duration:4});
+    mainScheduler.add(init_sched);
 
     // setup the experiment schedule 
     let prob_count = ServerUtils.getCountFromServer();
