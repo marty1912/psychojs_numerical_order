@@ -307,7 +307,7 @@ export function addInstructionsToSchedule(sched){
 
     if(sched instanceof SingleScheduler && (sched.rig == true)){
         console.log("adding instructions.");
-        sched.add(new InstuctionsScheduler({psychojs:sched.psychojs,correct_key:constants.KEY_RIG,image:constants.INSTRUCTION_RIG_2,pause_after:4}));
+        sched.add(new InstuctionsScheduler({psychojs:sched.psychojs,correct_key:constants.KEY_RIG,image:constants.IMG.INSTRUCTION_RIG_2,pause_after:4}));
     }
 
     return;

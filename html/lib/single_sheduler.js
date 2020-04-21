@@ -28,6 +28,8 @@ class SingleScheduler extends Scheduler{
 
         this.all_stims = Ord_stim.getStimsForTrial(this.psychojs.window);
 
+        this.fixation = FixationStim.getNFixations(this.psychojs.window,4);
+
         this.setupSchedule();
 
         this.data = []
@@ -64,10 +66,10 @@ class SingleScheduler extends Scheduler{
                 this.add(this.loopHead);
                 this.add(this.loopBodyEachFrame);
                 this.add(this.loopEnd);
-             if(this.practice){
-                this.feedbacks.push(new Scheduler(this.psychojs));
-                this.add(this.feedbacks[i]);
-            }
+                 if(this.practice){
+                    this.feedbacks.push(new Scheduler(this.psychojs));
+                    this.add(this.feedbacks[i]);
+                }
 
             }
             this.add(this.saveData);
@@ -109,12 +111,14 @@ class SingleScheduler extends Scheduler{
     // this function is run every round of the design. so its loophead - all stimuli in the right order - loopEnd - loophead...
     loopHead(){
 
-        this.stim = this.all_stims[this.loop_nr];
-
-
         this.fixation_no_flash = FixationStim.getNFixations(this.psychojs.window,1);
         this.fixation_no_flash[0].setAutoDraw(true);
 
+        this.stim = this.all_stims[this.loop_nr];
+
+
+
+        this.fixation[1].setAutoDraw(false);
         this.fixation = FixationStim.getNFixations(this.psychojs.window,4);
         this.fixation[0].setAutoDraw(true);
 
@@ -130,6 +134,8 @@ class SingleScheduler extends Scheduler{
         this.clock.reset();
 
         this.all_pressed_keys = [];
+
+        this.fixation_no_flash[0].setAutoDraw(false);
 
         return Scheduler.Event.NEXT;
     }
@@ -153,7 +159,8 @@ class SingleScheduler extends Scheduler{
         SchedulerUtils.activateAndDeactivateStim(t,this.t_present.start,this.t_present.end,this.stim,this.frameN,this.psychojs);
 
         // fixation
-        SchedulerUtils.activateAndDeactivateStim(t,this.t_present.end,this.total_loop_time,this.fixation[1],this.frameN,this.psychojs);
+        // do not deactivate after loop.
+        SchedulerUtils.activateAndDeactivateStim(t,this.t_present.end,this.total_loop_time+1,this.fixation[1],this.frameN,this.psychojs);
 
 
         //keyboard handling
@@ -178,7 +185,6 @@ class SingleScheduler extends Scheduler{
         if (continueRoutine) {
             return Scheduler.Event.FLIP_REPEAT;
         } else {
-            console.log("next loop..");
             return Scheduler.Event.NEXT;
         }
     }
@@ -205,13 +211,13 @@ class SingleScheduler extends Scheduler{
         // and now the loop has ended
         let trial_was_correct = false;
         // get data:
-        console.log("pressed keys: ",this.all_pressed_keys);
+        //console.log("pressed keys: ",this.all_pressed_keys);
         // check if it was correct or not.
         for( let i= 0; i< this.all_pressed_keys.length ; i++){
 
             let pressed_key = this.all_pressed_keys[i];
 
-            console.log("keyboard keys: ",pressed_key.name);
+            //console.log("keyboard keys: ",pressed_key.name);
 
 
             // we check for the first key that is a valid key
@@ -245,6 +251,8 @@ class SingleScheduler extends Scheduler{
 
             // added for feedback
         if (this.practice){
+
+            this.fixation[1].setAutoDraw(false);
             let single_correct = loopdata.correct ? true : false;
 
                 this.feedbacks[this.loop_nr].add(new StimScheduler({
@@ -261,6 +269,7 @@ class SingleScheduler extends Scheduler{
 
     saveData(){
 
+        this.fixation[1].setAutoDraw(false);
 
         if(this.rig == true){
 

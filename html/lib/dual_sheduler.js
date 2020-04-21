@@ -88,7 +88,7 @@ class DualScheduler extends Scheduler{
         this.fixation_time_1 = 2;
         this.present_time = 0.5;
         this.answer_time = 1.5;
-        this.dual_answer_time = dual_task_pres_time;
+        this.dual_answer_time = this.dual_task_pres_time;
         this.fixation_time_2 = 1;
 
 

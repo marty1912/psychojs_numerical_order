@@ -97,8 +97,6 @@ function main() {
     };
 
 
-    console.log("getDiff:",staircases.vis.getDifficulty());
-
     for (let i=0;i<order.staircase_modes.length;i++){
         if(order.staircase_modes[i] == 'phon'){
             mainScheduler.add(staircases.pract_phon);
@@ -136,6 +134,7 @@ function main() {
             pause_after:0}));
     }
 
+  
     // dual tasks
     for (let i=0;i<order.dual_modes.length;i++){
         if(order.dual_modes[i] == 'rig'){
