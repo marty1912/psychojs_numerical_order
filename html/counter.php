@@ -8,6 +8,7 @@ $path = $target_dir . $filename;
 
 $fp = fopen($path, "r+") or die("Unable to open count file: $path");
 
+// wait until we get the lock
 while (true){
     if (flock($fp, LOCK_EX)) {  // acquire an exclusive lock
         $count = fgets($fp);
