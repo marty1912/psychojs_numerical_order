@@ -15,6 +15,7 @@ import {FixationStim} from './lib/stims/fixation_stim.js';
 import * as constants from './lib/util/constants.js';
 import * as ServerUtils from './lib/util/server_utils.js';
 import * as SchedulerUtils from './lib/util/scheduler_utils.js';
+import { Color } from './lib/psychojs/util-2020.1.js';
 
 const psychoJS = new PsychoJS({
     debug: false
@@ -54,7 +55,6 @@ psychoJS.start({
 function main() {
 
 
-    SchedulerUtils.initImages();
     // add info from the URL:
     util.addInfoFromUrl(expInfo);
 
@@ -63,7 +63,8 @@ function main() {
 
 
     // workaround for problems with instructions.
-    let init_sched = new StimScheduler({psychojs:psychoJS,stim:new FixationStim({win:psychoJS.window}),duration:4});
+    let text_stim = new visual.TextStim({win:psychoJS.window,text:constants.TEXT_LOAD,color:new Color('black')});
+    let init_sched = new StimScheduler({psychojs:psychoJS,stim:text_stim,duration:1,wait_for_img:true});
     mainScheduler.add(init_sched);
 
     // setup the experiment schedule 

@@ -4,13 +4,16 @@ import { Scheduler } from './psychojs/util-2020.1.js';
 import * as util from './psychojs/util-2020.1.js';
 import * as visual from './psychojs/visual-2020.1.js';
 import * as SchedulerUtils from './util/scheduler_utils.js';
+import * as constants from './util/constants.js';
+import { Color } from './psychojs/util-2020.1.js';
 
 
 class StimScheduler extends Scheduler{
-    constructor({psychojs,stim,duration=4,init=false}){
+    constructor({psychojs,stim,duration=4,wait_for_img=false}){
         super(psychojs);
         this.psychojs = psychojs;
 
+        this.wait_for_img=wait_for_img;
         this.stim = stim;
 
         this.duration= duration;
@@ -24,7 +27,7 @@ class StimScheduler extends Scheduler{
     // sets up the schedule of the staircase procedure
     setupSchedule(){
         // setup the schedule
-        this.add(this.init);
+        this.add(this.setup_loop);
         this.add(this.showStim);
     }
     
@@ -32,7 +35,7 @@ class StimScheduler extends Scheduler{
         this.stim=stim;
     }
 
-    init(){
+    setup_loop(){
         this.clock = new util.Clock();  // set loop time to 0 by getting a new clock
         console.log("StimSched: stim is:",this.stim);
         return Scheduler.Event.NEXT;
@@ -63,8 +66,12 @@ class StimScheduler extends Scheduler{
         } else {
 
         this.stim.setAutoDraw(false);
-            if(this.init){
+            if(this.wait_for_img){
                 // check if everything is loaded.
+                if(!SchedulerUtils.allImagesLoaded()){
+                    let text_stim = new visual.TextStim({win:this.psychojs.window,text:constants.TEXT_LOAD,color:new Color('black')});
+                    this.add( new StimScheduler({psychojs:this.psychojs,stim:text_stim,duration:1,wait_for_img:true}))
+                }
                 
 
             }

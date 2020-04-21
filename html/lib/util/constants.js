@@ -7,51 +7,86 @@ export const URL_REDIRECT =  "https://survey2.edu.uni-graz.at/919136/lang-de";
 export const IMG ={};
 
 IMG.INSTRUCTION_STAIR_PHON_J_PRACTICE = new Image();
+IMG.INSTRUCTION_STAIR_PHON_J_PRACTICE.src= 'images/Slide1.jpg';
+
 IMG.INSTRUCTION_STAIR_PHON_J= new Image();
+IMG.INSTRUCTION_STAIR_PHON_J.src='images/Slide2.jpg';
+
 
 IMG.INSTRUCTION_STAIR_PHON_K_PRACTICE = new Image();
+IMG.INSTRUCTION_STAIR_PHON_K_PRACTICE.src='images/Slide3.jpg';
 IMG.INSTRUCTION_STAIR_PHON_K= new Image();
+IMG.INSTRUCTION_STAIR_PHON_K.src='images/Slide4.jpg';
 
 IMG.INSTRUCTION_STAIR_VIS_J_PRACTICE = new Image();
+IMG.INSTRUCTION_STAIR_VIS_J_PRACTICE.src='images/Slide5.jpg';
 IMG.INSTRUCTION_STAIR_VIS_J= new Image();
+IMG.INSTRUCTION_STAIR_VIS_J.src='images/Slide6.jpg';
 
 IMG.INSTRUCTION_STAIR_VIS_K_PRACTICE = new Image();
+IMG.INSTRUCTION_STAIR_VIS_K_PRACTICE.src='images/Slide7.jpg';
 IMG.INSTRUCTION_STAIR_VIS_K= new Image();
+IMG.INSTRUCTION_STAIR_VIS_K.src='images/Slide8.jpg';
 
 IMG.INSTRUCTION_SINGLE_J_PRACTICE = new Image();
+IMG.INSTRUCTION_SINGLE_J_PRACTICE.src='images/Slide9.jpg';
 IMG.INSTRUCTION_SINGLE_J= new Image();
+IMG.INSTRUCTION_SINGLE_J.src='images/Slide10.jpg';
 
 IMG.INSTRUCTION_SINGLE_K_PRACTICE = new Image();
+IMG.INSTRUCTION_SINGLE_K_PRACTICE.src='images/Slide11.jpg';
 IMG.INSTRUCTION_SINGLE_K= new Image();
+IMG.INSTRUCTION_SINGLE_K.src='images/Slide12.jpg';
 
 IMG.INSTRUCTION_DUAL_PHON_J_PRACTICE = new Image();
+IMG.INSTRUCTION_DUAL_PHON_J_PRACTICE.src='images/Slide13.jpg';
 IMG.INSTRUCTION_DUAL_PHON_J= new Image();
+IMG.INSTRUCTION_DUAL_PHON_J.src='images/Slide14.jpg';
 
 IMG.INSTRUCTION_DUAL_PHON_K_PRACTICE = new Image();
+IMG.INSTRUCTION_DUAL_PHON_K_PRACTICE.src='images/Slide15.jpg';
 IMG.INSTRUCTION_DUAL_PHON_K= new Image();
+IMG.INSTRUCTION_DUAL_PHON_K.src='images/Slide16.jpg';
 
 IMG.INSTRUCTION_DUAL_VIS_J_PRACTICE = new Image();
+IMG.INSTRUCTION_DUAL_VIS_J_PRACTICE.src='images/Slide17.jpg';
 IMG.INSTRUCTION_DUAL_VIS_J= new Image();
+IMG.INSTRUCTION_DUAL_VIS_J.src='images/Slide18.jpg';
 
 IMG.INSTRUCTION_DUAL_VIS_K_PRACTICE = new Image();
+IMG.INSTRUCTION_DUAL_VIS_K_PRACTICE.src='images/Slide19.jpg';
 IMG.INSTRUCTION_DUAL_VIS_K= new Image();
+IMG.INSTRUCTION_DUAL_VIS_K.src='images/Slide20.jpg';
 
 IMG.INSTRUCTION_RIG_J_PRACTICE = new Image();
+IMG.INSTRUCTION_RIG_J_PRACTICE.src='images/Slide21.jpg';
 IMG.INSTRUCTION_RIG_J= new Image();
+IMG.INSTRUCTION_RIG_J.src='images/Slide22.jpg';
 
 IMG.INSTRUCTION_RIG_K_PRACTICE = new Image();
+IMG.INSTRUCTION_RIG_K_PRACTICE.src='images/Slide24.jpg';
 IMG.INSTRUCTION_RIG_K= new Image();
+IMG.INSTRUCTION_RIG_K.src='images/Slide25.jpg';
 
 IMG.INSTRUCTION_RIG_2 = new Image();
+IMG.INSTRUCTION_RIG_2.src='images/Slide26.jpg';
 
 
 
 
 IMG.FEEDBACK_VIS_CORRECT = new Image();
+IMG.FEEDBACK_VIS_CORRECT.src='images/Slide28.jpg';
 IMG.FEEDBACK_VIS_INCORRECT = new Image();
+IMG.FEEDBACK_VIS_INCORRECT.src='images/Slide29.jpg';
 
 IMG.FEEDBACK_PHON_CORRECT = new Image();
+IMG.FEEDBACK_PHON_CORRECT.src='images/Slide30.jpg';
 IMG.FEEDBACK_PHON_INCORRECT = new Image();
+IMG.FEEDBACK_PHON_INCORRECT.src='images/Slide31.jpg';
 
 IMG.FEEDBACK_ORD_CORRECT = new Image();
+IMG.FEEDBACK_ORD_CORRECT.src='images/Slide32.jpg';
 IMG.FEEDBACK_ORD_INCORRECT = new Image();
+IMG.FEEDBACK_ORD_INCORRECT.src= 'images/Slide33.jpg';
+
+export const TEXT_LOAD = "Experiment wird geladen. Bitte warten..";

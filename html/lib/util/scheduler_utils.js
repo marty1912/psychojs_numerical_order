@@ -387,61 +387,6 @@ export function clone(obj) {
     throw new Error("Unable to copy obj! Its type isn't supported.");
 }
 
-// initalizes all images. TODO: wait for the images to be loaded.
-export function initImages(){
-
-constants.IMG.INSTRUCTION_STAIR_PHON_J_PRACTICE.src= 'images/Slide1.jpg';
-constants.IMG.INSTRUCTION_STAIR_PHON_J.src='images/Slide2.jpg';
-
-constants.IMG.INSTRUCTION_STAIR_PHON_K_PRACTICE.src='images/Slide3.jpg';
-constants.IMG.INSTRUCTION_STAIR_PHON_K.src='images/Slide4.jpg';
-
-constants.IMG.INSTRUCTION_STAIR_VIS_J_PRACTICE.src='images/Slide5.jpg';
-constants.IMG.INSTRUCTION_STAIR_VIS_J.src='images/Slide6.jpg';
-
-constants.IMG.INSTRUCTION_STAIR_VIS_K_PRACTICE.src='images/Slide7.jpg';
-constants.IMG.INSTRUCTION_STAIR_VIS_K.src='images/Slide8.jpg';
-
-constants.IMG.INSTRUCTION_SINGLE_J_PRACTICE.src='images/Slide9.jpg';
-constants.IMG.INSTRUCTION_SINGLE_J.src='images/Slide10.jpg';
-
-constants.IMG.INSTRUCTION_SINGLE_K_PRACTICE.src='images/Slide11.jpg';
-constants.IMG.INSTRUCTION_SINGLE_K.src='images/Slide12.jpg';
-
-constants.IMG.INSTRUCTION_DUAL_PHON_J_PRACTICE.src='images/Slide13.jpg';
-constants.IMG.INSTRUCTION_DUAL_PHON_J.src='images/Slide14.jpg';
-
-constants.IMG.INSTRUCTION_DUAL_PHON_K_PRACTICE.src='images/Slide15.jpg';
-constants.IMG.INSTRUCTION_DUAL_PHON_K.src='images/Slide16.jpg';
-
-constants.IMG.INSTRUCTION_DUAL_VIS_J_PRACTICE.src='images/Slide17.jpg';
-constants.IMG.INSTRUCTION_DUAL_VIS_J.src='images/Slide18.jpg';
-
-constants.IMG.INSTRUCTION_DUAL_VIS_K_PRACTICE.src='images/Slide19.jpg';
-constants.IMG.INSTRUCTION_DUAL_VIS_K.src='images/Slide20.jpg';
-
-constants.IMG.INSTRUCTION_RIG_J_PRACTICE.src='images/Slide21.jpg';
-constants.IMG.INSTRUCTION_RIG_J.src='images/Slide22.jpg';
-
-constants.IMG.INSTRUCTION_RIG_K_PRACTICE.src='images/Slide24.jpg';
-constants.IMG.INSTRUCTION_RIG_K.src='images/Slide25.jpg';
-
-constants.IMG.INSTRUCTION_RIG_2.src='images/Slide26.jpg';
-
-
-
-
-constants.IMG.FEEDBACK_VIS_CORRECT.src='images/Slide28.jpg';
-constants.IMG.FEEDBACK_VIS_INCORRECT.src='images/Slide29.jpg';
-
-constants.IMG.FEEDBACK_PHON_CORRECT.src='images/Slide30.jpg';
-constants.IMG.FEEDBACK_PHON_INCORRECT.src='images/Slide31.jpg';
-
-constants.IMG.FEEDBACK_ORD_CORRECT.src='images/Slide32.jpg';
-constants.IMG.FEEDBACK_ORD_INCORRECT.src= 'images/Slide33.jpg';
-
-
-}
 
 // copied from stackoverflow. checks if image is loaded correctly.
 export function IsImageOk(img) {
@@ -462,7 +407,18 @@ export function IsImageOk(img) {
     // No other way of checking: assume it’s ok.
     return true;
 }
-export function allImagesLoaded(){
 
+export function allImagesLoaded(){
+for (const image in constants.IMG){
+
+    if (image instanceof Image) {
+        
+        if(!isImageOk(image)){
+            return false;
+        }
+
+    }
+    return true;
+}
 
 }
