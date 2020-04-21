@@ -8,6 +8,7 @@ import * as sound from './psychojs/sound-2020.1.js';
 import {Ord_stim} from './stims/ord_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
 import {FixationStim} from './stims/fixation_stim.js';
+import {StimScheduler} from './stim_scheduler.js';
 import * as SchedulerUtils from './util/scheduler_utils.js';
 import * as constants from './util/constants.js';
 import * as ServerUtils from './util/server_utils.js';

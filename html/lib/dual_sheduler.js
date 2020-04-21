@@ -8,6 +8,7 @@ import {Ord_stim} from './stims/ord_stim.js';
 import {Phon_stim} from './stims/phon_stim.js';
 import {Vs_stim} from './stims/grid_stim.js';
 import {InstuctionsScheduler} from './instructions_sheduler.js';
+import {StimScheduler} from './stim_scheduler.js';
 import * as SchedulerUtils from './util/scheduler_utils.js';
 import {FixationStim} from './stims/fixation_stim.js';
 import * as constants from './util/constants.js';
