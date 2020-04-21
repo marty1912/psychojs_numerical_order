@@ -58,7 +58,7 @@ class Phon_stim extends TextStim{
     // @param len  - the lenght of the string you want
     // @param possible_letters - an array of chars to choose from (without putting back)
     //
-    static getRandomString(len,possible_letters=['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Y','Z']){
+    static getRandomString(len,possible_letters=['B','C','D','F','G','H','J','K','L','M','N','P','Q','R','S','T','V','W','X','Z']){
         // clamp the len between 0 and the array len.
         len = (len > possible_letters.length) ? possible_letters.length : len;
         len = (len < 0) ? 0 : len;
