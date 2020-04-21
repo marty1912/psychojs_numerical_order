@@ -39,6 +39,7 @@ class InstuctionsScheduler extends Scheduler{
 
     instructionsInit(){
 
+        console.log("init instructions with image:",this.image);
         this.instructions = new visual.ImageStim({
             win: this.psychojs.window,
             name: 'instructions',

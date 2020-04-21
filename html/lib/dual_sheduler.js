@@ -61,8 +61,7 @@ class DualScheduler extends Scheduler{
     // sets up the schedule of the staircase procedure
     setupSchedule(){
         // setup the schedule
-        let instr_img = SchedulerUtils.getInstructionsImage(this);
-        this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,image:instr_img}));
+        SchedulerUtils.addInstructionsToSchedule(this);
 
         let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
         for(let i= 0 ; i<n_loops ; i++)

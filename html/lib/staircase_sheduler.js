@@ -82,8 +82,7 @@ class StaircaseScheduler extends Scheduler{
     setupSchedule(){
         // setup the schedule
         
-        let instr_img = SchedulerUtils.getInstructionsImage(this);
-        this.add(new InstuctionsScheduler({psychojs:this.psychojs,correct_key:this.correct_key,image:instr_img}));
+        SchedulerUtils.addInstructionsToSchedule(this);
 
         let n_trials = (this.practice)? constants.PRACTICE_LEN : 25;
         // added for feedback

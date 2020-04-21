@@ -10,6 +10,7 @@ import {Vs_stim} from '../stims/grid_stim.js';
 import {StaircaseScheduler} from '../staircase_sheduler.js';
 import {DualScheduler} from '../dual_sheduler.js';
 import {SingleScheduler} from '../single_sheduler.js';
+import {InstuctionsScheduler} from '../instructions_sheduler.js';
 import * as constants from './constants.js';
 import { Scheduler } from '../psychojs/util-2020.1.js';
 
@@ -137,14 +138,14 @@ export function getFeedbackStim(win,mode,correct){
     }
 
     let stim = new visual.ImageStim({
-            win: win,
-            name: 'feedback',
-            image: image,
-            pos: [0, 0], ori: 0,
-            size:1,
-            opacity: 1,
-            depth: 0.0 
-        });
+        win: win,
+        name: 'feedback',
+        image: image,
+        pos: [0, 0], ori: 0,
+        size:1,
+        opacity: 1,
+        depth: 0.0 
+    });
 
 
     return stim;
@@ -154,37 +155,41 @@ export function getFeedbackStim(win,mode,correct){
 //@param sched: the scheduler for whom we need to get the instructions
 //@return the correct instruction image to use.
 export function getInstructionsImage(sched){
-    let image = undefined;
+    let images=[];
     if(sched instanceof StaircaseScheduler)
     {
         if (sched.correct_key =='j'){
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_STAIR_VIS_J_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_VIS_J_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_STAIR_VIS_J_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_STAIR_VIS_J;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_VIS_J);
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    image= constants.IMG.INSTRUCTION_STAIR_PHON_J_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_PHON_J_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_STAIR_PHON_J_PRACTICE_2);
                 }else{
-                    image=constants.IMG.INSTRUCTION_STAIR_PHON_J;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_PHON_J);
                 }
             }
         }else{
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_STAIR_VIS_K_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_VIS_K_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_STAIR_VIS_K_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_STAIR_VIS_K;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_VIS_K);
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    image= constants.IMG.INSTRUCTION_STAIR_PHON_K_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_PHON_K_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_STAIR_PHON_K_PRACTICE_2);
                 }else{
-                    image=constants.IMG.INSTRUCTION_STAIR_PHON_K;
+                    images.push(constants.IMG.INSTRUCTION_STAIR_PHON_K);
                 }
             }
 
@@ -195,32 +200,36 @@ export function getInstructionsImage(sched){
         if (sched.correct_key =='j'){
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_DUAL_VIS_J_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_VIS_J_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_DUAL_VIS_J_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_DUAL_VIS_J;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_VIS_J);
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    image= constants.IMG.INSTRUCTION_DUAL_PHON_J_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_PHON_J_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_DUAL_PHON_J_PRACTICE_2);
                 }else{
-                    image=constants.IMG.INSTRUCTION_DUAL_PHON_J;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_PHON_J);
                 }
             }
 
         }else{
             if(sched.mode == 'vis'){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_DUAL_VIS_K_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_VIS_K_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_DUAL_VIS_K_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_DUAL_VIS_K;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_VIS_K);
                 }
             }
             else if(sched.mode == 'phon'){
                 if(sched.practice){
-                    image= constants.IMG.INSTRUCTION_DUAL_PHON_K_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_PHON_K_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_DUAL_PHON_K_PRACTICE_2);
                 }else{
-                    image=constants.IMG.INSTRUCTION_DUAL_PHON_K;
+                    images.push(constants.IMG.INSTRUCTION_DUAL_PHON_K);
                 }
             }
 
@@ -235,16 +244,18 @@ export function getInstructionsImage(sched){
         if (sched.correct_key =='j'){
             if(sched.rig == true){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_RIG_J_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_RIG_J_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_RIG_J_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_RIG_J;
+                    images.push(constants.IMG.INSTRUCTION_RIG_J);
                 }
             }
             else if(sched.rig == false){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_SINGLE_J_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_SINGLE_J_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_SINGLE_J_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_SINGLE_J;
+                    images.push(constants.IMG.INSTRUCTION_SINGLE_J);
                 }
 
             }
@@ -252,16 +263,18 @@ export function getInstructionsImage(sched){
         }else{
             if(sched.rig == true){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_RIG_K_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_RIG_K_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_RIG_K_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_RIG_K;
+                    images.push(constants.IMG.INSTRUCTION_RIG_K);
                 }
             }
             else if(sched.rig == false){
                 if(sched.practice){
-                    image=constants.IMG.INSTRUCTION_SINGLE_K_PRACTICE;
+                    images.push(constants.IMG.INSTRUCTION_SINGLE_K_PRACTICE);
+                    images.push(constants.IMG.INSTRUCTION_SINGLE_K_PRACTICE_2);
                 }else{
-                    image= constants.IMG.INSTRUCTION_SINGLE_K;
+                    images.push(constants.IMG.INSTRUCTION_SINGLE_K);
                 }
 
             }
@@ -270,9 +283,35 @@ export function getInstructionsImage(sched){
 
         }
     }
-    console.log("got image:",image);
 
-    return image;
+    console.log("got images:",images);
+    return images;
+}
+// addInsrtuctionsToSchedule
+// gets correct instructions and adds them to the schedule
+export function addInstructionsToSchedule(sched){
+    let instr_imgs = getInstructionsImage(sched);
+    for(let i=0;i<instr_imgs.length;i++){
+        let pause_after = 4;
+        if(i+1!=instr_imgs.length){
+            pause_after=0;
+        }
+
+        if(sched instanceof SingleScheduler && (sched.rig == true)){
+            pause_after=0;
+        }
+
+        console.log("adding instructions.");
+        sched.add(new InstuctionsScheduler({psychojs:sched.psychojs,correct_key:sched.correct_key,image:instr_imgs[i],pause_after:pause_after}));
+    }
+
+    if(sched instanceof SingleScheduler && (sched.rig == true)){
+        console.log("adding instructions.");
+        sched.add(new InstuctionsScheduler({psychojs:sched.psychojs,correct_key:constants.KEY_RIG,image:constants.INSTRUCTION_RIG_2,pause_after:4}));
+    }
+
+    return;
+
 }
 
 // getScheduleOrder(prob_count)
@@ -409,16 +448,16 @@ export function IsImageOk(img) {
 }
 
 export function allImagesLoaded(){
-for (const image in constants.IMG){
+    for (const image in constants.IMG){
 
-    if (image instanceof Image) {
-        
-        if(!isImageOk(image)){
-            return false;
+        if (image instanceof Image) {
+
+            if(!isImageOk(image)){
+                return false;
+            }
+
         }
-
+        return true;
     }
-    return true;
-}
 
 }

@@ -12,6 +12,7 @@ import {SingleScheduler} from './lib/single_sheduler.js';
 import {DualScheduler} from './lib/dual_sheduler.js';
 import {StimScheduler} from './lib/stim_scheduler.js';
 import {FixationStim} from './lib/stims/fixation_stim.js';
+import {InstuctionsScheduler} from './lib/instructions_sheduler.js';
 import * as constants from './lib/util/constants.js';
 import * as ServerUtils from './lib/util/server_utils.js';
 import * as SchedulerUtils from './lib/util/scheduler_utils.js';
@@ -62,14 +63,29 @@ function main() {
     getPCSpecs(prob_code);
 
 
-    // workaround for problems with instructions.
+    // setup the experiment schedule 
+    let prob_count = ServerUtils.getCountFromServer();
+    let order = SchedulerUtils.getScheduleOrder(prob_count);
+
+    // we now load the pictures and check if they are loaded 
     let text_stim = new visual.TextStim({win:psychoJS.window,text:constants.TEXT_LOAD,color:new Color('black')});
     let init_sched = new StimScheduler({psychojs:psychoJS,stim:text_stim,duration:1,wait_for_img:true});
     mainScheduler.add(init_sched);
 
-    // setup the experiment schedule 
-    let prob_count = ServerUtils.getCountFromServer();
-    let order = SchedulerUtils.getScheduleOrder(prob_count);
+    // initial text.
+    if(order.correct_key  == 'j'){
+        mainScheduler.add(new InstuctionsScheduler({
+            psychojs:psychoJS,
+            correct_key:order.correct_key,
+            image:constants.IMG.INITIAL_INSTR_J,
+            pause_after:0}));
+    }else{
+        mainScheduler.add(new InstuctionsScheduler({
+            psychojs:psychoJS,
+            correct_key:order.correct_key,
+            image:constants.IMG.INITIAL_INSTR_K,
+            pause_after:0}));
+    }
 
     // staircases first
     // we use an object so we can give it to the dual task later. it needs it to get the correct difficulty.
@@ -104,6 +120,21 @@ function main() {
         prob_code:prob_code ,
         correct_key:order.correct_key,
         practice:false}));
+
+    // pause.
+    if(order.correct_key  == 'j'){
+        mainScheduler.add(new InstuctionsScheduler({
+            psychojs:psychoJS,
+            correct_key:order.correct_key,
+            image:constants.IMG.PAUSE_INSTR_J,
+            pause_after:0}));
+    }else{
+        mainScheduler.add(new InstuctionsScheduler({
+            psychojs:psychoJS,
+            correct_key:order.correct_key,
+            image:constants.IMG.PAUSE_INSTR_K,
+            pause_after:0}));
+    }
 
     // dual tasks
     for (let i=0;i<order.dual_modes.length;i++){
