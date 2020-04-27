@@ -58,15 +58,15 @@ class SingleScheduler extends Scheduler{
 
             this.add(this.initRig);
 
-        // added for feedback
-        this.feedbacks = [];
+            // added for feedback
+            this.feedbacks = [];
             let n_loops = (this.practice) ? constants.PRACTICE_LEN : this.all_stims.length;
             for(let i= 0 ; i<n_loops ; i++)
             {
                 this.add(this.loopHead);
                 this.add(this.loopBodyEachFrame);
                 this.add(this.loopEnd);
-                 if(this.practice){
+                if(this.practice){
                     this.feedbacks.push(new Scheduler(this.psychojs));
                     this.add(this.feedbacks[i]);
                 }
@@ -95,7 +95,7 @@ class SingleScheduler extends Scheduler{
         this.answer_time = 1.5;
         this.fixation_time_2 = 1;
 
-        
+
 
 
         this.total_loop_time =  this.fixation_time_1+this.present_time +this.answer_time+this.fixation_time_2;
@@ -249,16 +249,16 @@ class SingleScheduler extends Scheduler{
         // our own approach to data stuff.
         this.data.push(loopdata);
 
-            // added for feedback
+        // added for feedback
         if (this.practice){
 
             this.fixation[1].setAutoDraw(false);
             let single_correct = loopdata.correct ? true : false;
 
-                this.feedbacks[this.loop_nr].add(new StimScheduler({
-                    psychojs:this.psychojs,
-                    stim:SchedulerUtils.getFeedbackStim(this.psychojs.window,'single',single_correct),
-                    duration:2}));
+            this.feedbacks[this.loop_nr].add(new StimScheduler({
+                psychojs:this.psychojs,
+                stim:SchedulerUtils.getFeedbackStim(this.psychojs.window,'single',single_correct),
+                duration:2}));
         }
 
         this.loop_nr++;
@@ -276,7 +276,11 @@ class SingleScheduler extends Scheduler{
             let trial = "dual_rig";
             ServerUtils.upload(this.data,trial,this.prob_code);
             let rig_keys = this.rig_keyboard.getKeys({keyList: this.rig_keys, waitRelease: false});
-            trial = "rig";
+            if(this.practice){
+                trial = "rig_practice";
+            }else{
+                trial = "rig";
+            }
             ServerUtils.upload(this.rig_keys,trial,this.prob_code);
             console.log("rig data:",rig_keys);
         }
