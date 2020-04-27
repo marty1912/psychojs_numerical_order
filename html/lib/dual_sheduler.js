@@ -124,6 +124,8 @@ class DualScheduler extends Scheduler{
         // random boolean
         this.dual_task_correct = Math.random() >= 0.5; 
 
+        console.log("debugidibug correct stim pair?:",this.dual_task_correct);
+
         this.dual_stims = this.dual_stim_class.getPairForTrial(this.dual_difficulty,this.psychojs.window,this.dual_task_correct);
 
         this.frameN = 0;
@@ -234,7 +236,9 @@ class DualScheduler extends Scheduler{
             loopdata.rt_ord = response_ord.rt;
         }
 
-        let response_dual = this.checkCorrectKey(this.dual_all_pressed_keys);
+        let response_dual = this.checkCorrectKeyDual(this.dual_all_pressed_keys);
+
+
         if(response_dual != undefined){
             loopdata.correct_dual = response_dual.correct;
             loopdata.rt_dual = response_dual.rt;
@@ -244,6 +248,7 @@ class DualScheduler extends Scheduler{
 
         // our own approach to data stuff.
         this.data.push(loopdata);
+
 
             // added for feedback
         if (this.practice){
@@ -272,6 +277,34 @@ class DualScheduler extends Scheduler{
         ServerUtils.upload(this.data,trial,this.prob_code);
 
         return Scheduler.Event.NEXT;
+    }
+
+    checkCorrectKeyDual(all_pressed_keys){
+
+        let trial_was_correct = false;
+        // get data:
+        console.log("pressed keys: ",all_pressed_keys);
+        // check if it was correct or not.
+        // check if it was correct or not.
+        for( let i= 0; i< all_pressed_keys.length ; i++){
+
+            let pressed_key = all_pressed_keys[i];
+
+
+            if( this.valid_keys.includes(pressed_key.name)){
+
+                if ((pressed_key.name == this.correct_key && this.dual_task_correct == true) 
+                    || (pressed_key.name != this.correct_key && this.dual_task_correct == false)){
+                    // correct response
+                    //
+                    return {correct: true,rt:pressed_key.rt};
+                }
+                else{
+                    return {correct: false,rt:pressed_key.rt};
+                }
+
+            }
+    }
     }
 
     checkCorrectKey(all_pressed_keys){

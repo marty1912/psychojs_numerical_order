@@ -96,6 +96,22 @@ function main() {
         vis: new StaircaseScheduler({psychojs:psychoJS, prob_code:prob_code ,mode:'vis',correct_key:order.correct_key,practice:false}),
     };
 
+         mainScheduler.add(new DualScheduler({
+                prob_code:prob_code ,
+                psychojs:psychoJS,
+                mode:"vis",
+                correct_key:order.correct_key,
+                staircase_sched:staircases.vis,
+                practice:true}));
+
+            mainScheduler.add(new DualScheduler({
+                prob_code:prob_code ,
+                psychojs:psychoJS,
+                mode:"vis",
+                correct_key:order.correct_key,
+                staircase_sched:staircases.vis,
+                practice:false}));
+
 
     for (let i=0;i<order.staircase_modes.length;i++){
         if(order.staircase_modes[i] == 'phon'){
