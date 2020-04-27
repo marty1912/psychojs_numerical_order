@@ -276,13 +276,27 @@ class SingleScheduler extends Scheduler{
             let trial = "dual_rig";
             ServerUtils.upload(this.data,trial,this.prob_code);
             let rig_keys = this.rig_keyboard.getKeys({keyList: this.rig_keys, waitRelease: false});
+            console.log("rig keys:",rig_keys);
             if(this.practice){
                 trial = "rig_practice";
             }else{
                 trial = "rig";
             }
-            ServerUtils.upload(this.rig_keys,trial,this.prob_code);
-            console.log("rig data:",rig_keys);
+
+            let rig_keys_recode  = [];
+            for(let i=0;i<rig_keys.length;i++){
+                let rig_key_press = {};
+                rig_key_press.name = rig_keys[i].name;
+                rig_key_press.code = rig_keys[i].code;
+                rig_key_press.rt = rig_keys[i].rt;
+                rig_key_press.tDown = rig_keys[i].tDown;
+                rig_key_press.duration = rig_keys[i].duration;
+
+                rig_keys_recode.push(rig_key_press);
+            }
+
+            ServerUtils.upload(rig_keys_recode,trial,this.prob_code);
+            console.log("rig data:",rig_keys_recode);
         }
         else
         {
