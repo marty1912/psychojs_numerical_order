@@ -155,12 +155,14 @@ function main() {
         else if(order.dual_modes[i] == 'phon'){
 
             mainScheduler.add(new DualScheduler({psychojs:psychoJS,
+                prob_code:prob_code ,
                 mode:order.dual_modes[i],
                 correct_key:order.correct_key,
                 staircase_sched:staircases.phon,
                 practice:true}));
 
             mainScheduler.add(new DualScheduler({psychojs:psychoJS,
+                prob_code:prob_code ,
                 mode:order.dual_modes[i],
                 correct_key:order.correct_key,
                 staircase_sched:staircases.phon,
@@ -169,6 +171,7 @@ function main() {
         else if(order.dual_modes[i] == 'vis'){
 
             mainScheduler.add(new DualScheduler({
+                prob_code:prob_code ,
                 psychojs:psychoJS,
                 mode:order.dual_modes[i],
                 correct_key:order.correct_key,
@@ -176,6 +179,7 @@ function main() {
                 practice:true}));
 
             mainScheduler.add(new DualScheduler({
+                prob_code:prob_code ,
                 psychojs:psychoJS,
                 mode:order.dual_modes[i],
                 correct_key:order.correct_key,

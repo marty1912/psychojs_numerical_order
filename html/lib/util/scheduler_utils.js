@@ -428,7 +428,8 @@ export function clone(obj) {
 
 
 // copied from stackoverflow. checks if image is loaded correctly.
-export function IsImageOk(img) {
+export function isImageOk(img) {
+
     // During the onload event, IE correctly identifies any images that
     // weren’t downloaded as not complete. Others should too. Gecko-based
     // browsers act like NS4 in that they report this incorrectly.
@@ -448,16 +449,22 @@ export function IsImageOk(img) {
 }
 
 export function allImagesLoaded(){
-    for (const image in constants.IMG){
 
-        if (image instanceof Image) {
+    console.log("(allImagesLoaded)");
+    for (const key in constants.IMG){
 
-            if(!isImageOk(image)){
-                return false;
+        if(constants.IMG.hasOwnProperty(key)){
+            let image = constants.IMG[key];
+
+            if (image instanceof Image) {
+
+                if(!isImageOk(image)){
+                    return false;
+                }
+
             }
-
         }
-        return true;
     }
+    return true;
 
 }

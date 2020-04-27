@@ -68,7 +68,8 @@ class StimScheduler extends Scheduler{
         this.stim.setAutoDraw(false);
             if(this.wait_for_img){
                 // check if everything is loaded.
-                if(!SchedulerUtils.allImagesLoaded()){
+                if(SchedulerUtils.allImagesLoaded() == false){
+                    console.log("waiting for images to load");
                     let text_stim = new visual.TextStim({win:this.psychojs.window,text:constants.TEXT_LOAD,color:new Color('black')});
                     this.add( new StimScheduler({psychojs:this.psychojs,stim:text_stim,duration:1,wait_for_img:true}))
                 }
