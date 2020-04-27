@@ -193,7 +193,7 @@ class SingleScheduler extends Scheduler{
 
         let loopdata = {};
         loopdata.prob_code = this.prob_code;
-        loopdata.numbers = this.stim.getNumbers();
+        loopdata.numbers = this.stim.getNumbers().join(" ");
         loopdata.ascending = this.stim.isAscending();
         loopdata.descending = this.stim.isDescending();
         loopdata.ordered = this.stim.isOrdered();
