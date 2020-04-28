@@ -107,17 +107,6 @@ function main() {
         }
     }
 
-
-    // single task 
-    mainScheduler.add(new SingleScheduler({psychojs: psychoJS,
-        prob_code:prob_code ,
-        correct_key:order.correct_key,
-        practice:true}));
-    mainScheduler.add(new SingleScheduler({psychojs: psychoJS,
-        prob_code:prob_code ,
-        correct_key:order.correct_key,
-        practice:false}));
-
     // pause.
     if(order.correct_key  == 'j'){
         mainScheduler.add(new InstuctionsScheduler({
@@ -133,10 +122,37 @@ function main() {
             pause_after:0}));
     }
 
-  
+
+    // single task 
+    mainScheduler.add(new SingleScheduler({psychojs: psychoJS,
+        prob_code:prob_code ,
+        correct_key:order.correct_key,
+        practice:true}));
+    mainScheduler.add(new SingleScheduler({psychojs: psychoJS,
+        prob_code:prob_code ,
+        correct_key:order.correct_key,
+        practice:false}));
+
+
     // dual tasks
     for (let i=0;i<order.dual_modes.length;i++){
         if(order.dual_modes[i] == 'rig'){
+
+            // pause.
+            if(order.correct_key  == 'j'){
+                mainScheduler.add(new InstuctionsScheduler({
+                    psychojs:psychoJS,
+                    correct_key:order.correct_key,
+                    image:constants.IMG.PAUSE_INSTR_J,
+                    pause_after:0}));
+            }else{
+                mainScheduler.add(new InstuctionsScheduler({
+                    psychojs:psychoJS,
+                    correct_key:order.correct_key,
+                    image:constants.IMG.PAUSE_INSTR_K,
+                    pause_after:0}));
+            }
+
 
             mainScheduler.add(new SingleScheduler({psychojs: psychoJS,
                 prob_code:prob_code ,
@@ -153,6 +169,22 @@ function main() {
         }
         else if(order.dual_modes[i] == 'phon'){
 
+            // pause.
+            if(order.correct_key  == 'j'){
+                mainScheduler.add(new InstuctionsScheduler({
+                    psychojs:psychoJS,
+                    correct_key:order.correct_key,
+                    image:constants.IMG.PAUSE_INSTR_J,
+                    pause_after:0}));
+            }else{
+                mainScheduler.add(new InstuctionsScheduler({
+                    psychojs:psychoJS,
+                    correct_key:order.correct_key,
+                    image:constants.IMG.PAUSE_INSTR_K,
+                    pause_after:0}));
+            }
+
+
             mainScheduler.add(new DualScheduler({psychojs:psychoJS,
                 prob_code:prob_code ,
                 mode:order.dual_modes[i],
@@ -168,6 +200,22 @@ function main() {
                 practice:false}));
         }
         else if(order.dual_modes[i] == 'vis'){
+
+            // pause.
+            if(order.correct_key  == 'j'){
+                mainScheduler.add(new InstuctionsScheduler({
+                    psychojs:psychoJS,
+                    correct_key:order.correct_key,
+                    image:constants.IMG.PAUSE_INSTR_J,
+                    pause_after:0}));
+            }else{
+                mainScheduler.add(new InstuctionsScheduler({
+                    psychojs:psychoJS,
+                    correct_key:order.correct_key,
+                    image:constants.IMG.PAUSE_INSTR_K,
+                    pause_after:0}));
+            }
+
 
             mainScheduler.add(new DualScheduler({
                 prob_code:prob_code ,
@@ -217,7 +265,7 @@ function getPCSpecs(prob_code){
     client_info.screen_height_t_ratio = window.screen.height * window.devicePixelRatio;
     client_info.screen_width_t_ratio = window.screen.width * window.devicePixelRatio;
 
-    
+
 
 
     ServerUtils.upload([client_info],"client_info_",prob_code);
