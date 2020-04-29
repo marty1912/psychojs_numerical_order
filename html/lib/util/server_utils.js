@@ -32,6 +32,7 @@ export function getCountFromServer(){
     // get random number between 0 and 23 for if we dont get a response from the server
     let count = Math.floor(Math.random() * 24) 
 
+    console.log("response from server:",req.responseText);
     if(req.status == 200) {
 
         //console.log("recieved: ",req.responseText);
@@ -71,7 +72,6 @@ export function upload(data,trial,prob_code){
     http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     
     http.send(ndata);
-    //console.log("data sent. ");
 
 }
 
