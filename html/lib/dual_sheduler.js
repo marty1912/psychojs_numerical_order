@@ -228,7 +228,7 @@ class DualScheduler extends Scheduler{
         loopdata.framerate = loopdata.n_frames/loopdata.loop_duration;
 
         loopdata.dual_stim = this.dual_stims.toString();
-        loopdata.datetime = new Date().toLocaleString();
+        loopdata.datetime = new Date().toLocaleString("de-AT");
 
         let response_ord = this.checkCorrectKey(this.all_pressed_keys);
         if(response_ord != undefined){

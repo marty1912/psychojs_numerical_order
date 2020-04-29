@@ -204,7 +204,7 @@ class SingleScheduler extends Scheduler{
         loopdata.loop_duration = this.clock.getTime();
         loopdata.framerate = loopdata.n_frames/loopdata.loop_duration;
 
-        loopdata.datetime = new Date().toLocaleString();
+        loopdata.datetime = new Date().toLocaleString("de-AT");
 
         loopdata.rig = this.rig;
 
