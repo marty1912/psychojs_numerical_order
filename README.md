@@ -1,6 +1,6 @@
 ## numerical order experiment.
 
-This psychological experiment was implemented using psychojs. 
+This psychological experiment was implemented using [PsychoJs](https://github.com/psychopy/psychojs). 
 It was used in a study to investigate the reverse distance effect (Lyons et al., 2016) using a commom model of working memory (Baddeley, 2000).
 Stimuli were modeled after other experiments investigating dual task performance (Cavdaroglu & Knops, 2016),(Rammelaere et al., 2003)
 and numerical order processing (Vogel et al., 2017).
