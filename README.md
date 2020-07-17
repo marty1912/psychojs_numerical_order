@@ -46,7 +46,7 @@ Participants are presented with a stimulus meant to put a load on the central ex
 
 ### Instructions
 
-The instructions were created using a powerpoint presentation which can be found [here](./html/images/Bilder Instruktion.pptx).
+The instructions were created using a powerpoint presentation which can be found [here](html/images/Bilder Instruktion.pptx).
 
 ### Literature
 
