@@ -44,6 +44,10 @@ Participants are presented with a stimulus meant to put a load on the central ex
 
 ![executive task design](./pictures_readme/design_exe.png)
 
+### Instructions
+
+The instructions were created using a powerpoint presentation which can be found [here](./html/images/Bilder Instruktion.pptx).
+
 ### Literature
 
 Baddeley, A. (2000). The episodic buffer: A new component of working memory? Trends in Cognitive Sciences, 4(11), 417–423. https://doi.org/10.1016/S1364-6613(00)01538-2
